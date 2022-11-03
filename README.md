@@ -4,18 +4,20 @@
 
 ### Endpoints Available
 
-#### Queries
+#### `GET` Queries
 
-`GET` Queries
-
+```
 SC - Top level sub classes only
 SN - Sub classes with children
 IN - Instances
+```
 
-- AITask (CC): `/api/onto/AITask`
-- KnowledgeLevel (IN): `/api/onto/KnowledgeLevel`
+| Ontology Concept  | Endpoint  | Usage |
+| ----------- | ----------- | ----------- |
+| AITask (SN) | `/api/onto/AITask` | Cockpit | 
+| KnowledgeLevel (IN) | `/api/onto/KnowledgeLevel`| Cockpit |
 
-🚧 Under Construction 🚧
+🚧 Ongoing Development 🚧
 
 
 ### Setup
