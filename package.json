@@ -1,0 +1,22 @@
+{
+  "name": "iseeontoapi",
+  "version": "1.0.0",
+  "description": "Onto API for iSee",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "iSee",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "moment": "^2.29.3",
+    "nodemon": "^2.0.16",
+    "uuid": "^8.3.2"
+  }
+}
