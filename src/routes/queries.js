@@ -7,6 +7,7 @@ const queryctrl = require('../controllers/queries');
 //---------------------------------------------------
 
 // Get one
+router.get('/AITask', queryctrl.getAITasks);
 router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
 
 module.exports = router;

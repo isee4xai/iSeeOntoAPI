@@ -6,7 +6,14 @@
 
 #### Queries
 
-- KnowledgeLevel: `GET /api/onto/KnowledgeLevel`
+`GET` Queries
+
+SC - Top level sub classes only
+SN - Sub classes with children
+IN - Instances
+
+- AITask (CC): `/api/onto/AITask`
+- KnowledgeLevel (IN): `/api/onto/KnowledgeLevel`
 
 🚧 Under Construction 🚧
 
