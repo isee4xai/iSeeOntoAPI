@@ -22,6 +22,21 @@ module.exports.getAITasks = async (req, res) => {
   }
 };
 
+
+// Get AI Task - SN <https://purl.org/heals/eo#ArtificialIntelligenceMethod>
+module.exports.getAIMethods = async (req, res) => {
+  try {
+    getQueryForClassesWithChildren('https://purl.org/heals/eo#ArtificialIntelligenceMethod').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
 module.exports.getKnowledgeLevel = async (req, res) => {
   try {
     getQueryForInstances('user', 'KnowledgeLevel').then(function (response) {
