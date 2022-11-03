@@ -12,10 +12,11 @@ SN - Sub classes with children
 IN - Instances
 ```
 
-| Ontology Concept  | Endpoint  | Usage |
-| ----------- | ----------- | ----------- |
-| AITask (SN) | `/api/onto/AITask` | Cockpit | 
-| KnowledgeLevel (IN) | `/api/onto/KnowledgeLevel`| Cockpit |
+| Ontology Concept | Endpoint | Parent Class  | Usage |
+| ----------- | ----------- | ----------- | ----------- |
+| AITask (SN)  | `/api/onto/AITask` | <https://purl.org/heals/eo#AITask> | Cockpit | 
+| AIMethod (SN) | `/api/onto/AIMethod` | <https://purl.org/heals/eo#ArtificialIntelligenceMethod> | Cockpit | 
+| KnowledgeLevel (IN) | `/api/onto/KnowledgeLevel` | <http://www.w3id.org/iSeeOnto/user#KnowledgeLevel>  | Cockpit |
 
 🚧 Ongoing Development 🚧
 
