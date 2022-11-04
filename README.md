@@ -20,6 +20,28 @@ IN - Instances
 
 🚧 Ongoing Development 🚧
 
+### Response Model
+
+#### For Instances (IN)
+`key` and `label` 
+
+#### For Classes (SC & SN)
+`key`, `label`, `parent` and `children` 
+
+#### Sample Response
+```json
+[
+  {
+    "key":"https://purl.org/heals/eo#ArtificialIntelligenceMethod",
+    "label":"AI Method",
+    "parent":"http://www.w3id.org/iSeeOnto/user#UserQuestionTarget",
+    "children": [ ]
+  },
+  {
+  }
+]
+```
+
 
 ### Setup
 
