@@ -1,11 +1,12 @@
 # iSee Setup Guide
 
-docker-compose build --build-arg JENA_VERSION=3.16.0
+```
 
-docker-compose run --rm --service-ports fuseki --mem /ds
+docker build -t isee4xai/ontofuseki:dev .
 
-docker-compose run --rm --name iSeeFuseki --service-ports fuseki --update --loc databases/DB2 /iseedev
+docker-compose --file docker-compose.yml up -d --build 
 
+```
 
 
 

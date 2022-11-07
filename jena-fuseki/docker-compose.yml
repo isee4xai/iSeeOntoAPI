@@ -1,0 +1,17 @@
+version: '3.0'
+services:
+  isee-onto-fuseki:
+    restart: always
+    container_name: iseeontofuseki
+    command: [ "--tdb2", "--update", "--loc", "databases/DB2", "/iseedev" ]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3030:3130'
+    volumes:
+      - isee-volume-fuseki-logs-dev:/fuseki/logs
+      - isee-volume-fuseki-dev:/fuseki/databases
+volumes:
+  isee-volume-fuseki-dev: {}
+  isee-volume-fuseki-logs-dev: {}
