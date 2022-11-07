@@ -193,20 +193,6 @@ module.exports.getKnowledgeLevel = async (req, res) => {
   }
 };
 
-// get TechnicalFacilities - IN <http://www.w3id.org/iSeeOnto/user#TechnicalFacilities>
-module.exports.getTechnicalFacilities = async (req, res) => {
-  try {
-    getQueryForInstances('user', 'TechnicalFacilities').then(function (response) {
-      res.status(200).json(response)
-    }).catch(function (error) {
-      console.log(error);
-      res.status(500).json(error);
-    });
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-};
-
 // HELPER FUNCTIONS
 function getQueryForInstances(ontology, parent) {
 
