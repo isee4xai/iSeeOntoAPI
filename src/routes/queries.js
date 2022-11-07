@@ -18,7 +18,8 @@ router.get('/ExplainerConcurrentness', queryctrl.getExplainerConcurrentness);
 router.get('/ExplanationScope', queryctrl.getExplanationScope);
 router.get('/ExplanationTarget', queryctrl.getExplanationTarget);
 router.get('/UserQuestionTarget', queryctrl.getUserQuestionTarget);
-// INTENT
+router.get('/UserIntent', queryctrl.getUserIntent);
+router.get('/UserDomain', queryctrl.getUserDomain);
 router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
 router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
 module.exports = router;

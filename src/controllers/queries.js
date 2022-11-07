@@ -151,6 +151,34 @@ module.exports.getUserQuestionTarget = async (req, res) => {
   }
 };
 
+// Get UserDomain - IN // get KnowledgeLevel - IN <http://www.w3id.org/iSeeOnto/user#Domain>
+module.exports.getUserDomain = async (req, res) => {
+  try {
+    getQueryForInstances('user', 'Domain').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// Get UserIntent - IN <http://semanticscience.org/resource/SIO_000358>
+module.exports.getUserIntent = async (req, res) => {
+  try {
+    getQueryForInstancesOther('http://semanticscience.org/resource/SIO_000358').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
 // get KnowledgeLevel - IN <http://www.w3id.org/iSeeOnto/user#KnowledgeLevel>
 module.exports.getKnowledgeLevel = async (req, res) => {
   try {
@@ -195,6 +223,48 @@ function getQueryForInstances(ontology, parent) {
     order by ?class`;
 
     console.log(query)
+    var data = qs.stringify({
+      'query': query
+    });
+    var config = {
+      method: 'post',
+      url: endpointUrl,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: data
+    };
+
+    return axios(config)
+      .then(function (response) {
+        const parsed = parseClasses(response);
+        return parsed;
+      })
+      .catch(function (error) {
+        return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+      });
+
+  } catch (error) {
+    return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+  }
+
+}
+
+
+function getQueryForInstancesOther(key) {
+
+  try {
+    const query = `
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+    SELECT ?class ?label
+    WHERE {
+        ?class rdf:type <`+ key + `> .
+        ?class rdfs:label ?label .
+    }
+    order by ?class`;
+
     var data = qs.stringify({
       'query': query
     });
