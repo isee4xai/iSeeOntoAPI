@@ -37,9 +37,138 @@ module.exports.getAIMethods = async (req, res) => {
   }
 };
 
+// Get Data Types - IN <http://www.w3id.org/iSeeOnto/explainer#DataType>
+module.exports.getDataTypes = async (req, res) => {
+  try {
+    getQueryForInstances('explainer', 'DataType').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// Get AIModelAssessmentMetric - IN <http://www.w3id.org/iSeeOnto/aimodelevaluation#AIModelAssessmentMetric>
+module.exports.getAIModelAssessmentMetric = async (req, res) => {
+  try {
+    getQueryForInstances('aimodelevaluation', 'AIModelAssessmentMetric').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// Get AIModelAssessmentDimension - IN <http://www.w3id.org/iSeeOnto/aimodelevaluation#AIModelAssessmentDimension>
+module.exports.getAIModelAssessmentDimension = async (req, res) => {
+  try {
+    getQueryForInstances('aimodelevaluation', 'AIModelAssessmentDimension').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+
+// hasPortability - IN <http://www.w3id.org/iSeeOnto/explainer#Portability>
+module.exports.getPortability = async (req, res) => {
+  try {
+    getQueryForInstances('explainer', 'Portability').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// hasConcurrentness - IN <http://www.w3id.org/iSeeOnto/explainer#ExplainerConcurrentness>
+module.exports.getExplainerConcurrentness = async (req, res) => {
+  try {
+    getQueryForInstances('explainer', 'ExplainerConcurrentness').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// ExplanationScope - IN <http://www.w3id.org/iSeeOnto/explainer#ExplanationScope>
+module.exports.getExplanationScope = async (req, res) => {
+  try {
+    getQueryForInstances('explainer', 'ExplanationScope').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// hasExplanationTarget - IN <http://www.w3id.org/iSeeOnto/explainer#ExplanationTarget>
+module.exports.getExplanationTarget = async (req, res) => {
+  try {
+    getQueryForInstances('explainer', 'ExplanationTarget').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+
+// Get UserQuestionTarget - SN <http://www.w3id.org/iSeeOnto/user#UserQuestionTarget>
+module.exports.getUserQuestionTarget = async (req, res) => {
+  try {
+    getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#UserQuestionTarget').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// get KnowledgeLevel - IN <http://www.w3id.org/iSeeOnto/user#KnowledgeLevel>
 module.exports.getKnowledgeLevel = async (req, res) => {
   try {
     getQueryForInstances('user', 'KnowledgeLevel').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+// get TechnicalFacilities - IN <http://www.w3id.org/iSeeOnto/user#TechnicalFacilities>
+module.exports.getTechnicalFacilities = async (req, res) => {
+  try {
+    getQueryForInstances('user', 'TechnicalFacilities').then(function (response) {
       res.status(200).json(response)
     }).catch(function (error) {
       console.log(error);
@@ -65,6 +194,7 @@ function getQueryForInstances(ontology, parent) {
     }
     order by ?class`;
 
+    console.log(query)
     var data = qs.stringify({
       'query': query
     });
@@ -104,6 +234,7 @@ function getQueryForClassesWithChildren(rootKey) {
   		?class rdfs:subClassOf ?parent
     }
     order by ?class`;
+    console.log(query)
 
 
     var data = qs.stringify({

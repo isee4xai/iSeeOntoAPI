@@ -9,6 +9,16 @@ const queryctrl = require('../controllers/queries');
 // Get one
 router.get('/AITask', queryctrl.getAITasks); 
 router.get('/AIMethod', queryctrl.getAIMethods);
+router.get('/DataType', queryctrl.getDataTypes);
+router.get('/AIModelAssessmentMetric', queryctrl.getAIModelAssessmentMetric);
+router.get('/AIModelAssessmentDimension', queryctrl.getAIModelAssessmentDimension);
+router.get('/Portability', queryctrl.getPortability);
+router.get('/ExplainerConcurrentness', queryctrl.getExplainerConcurrentness);
+// router.get('/hasPresentation', queryctrl.hasPresentation);
+router.get('/ExplanationScope', queryctrl.getExplanationScope);
+router.get('/ExplanationTarget', queryctrl.getExplanationTarget);
+router.get('/UserQuestionTarget', queryctrl.getUserQuestionTarget);
+// INTENT
 router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
-
+router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
 module.exports = router;
