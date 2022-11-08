@@ -23,7 +23,10 @@ router.get('/UserDomain', queryctrl.getUserDomain);
 router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
 // router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
 
+
+// ADMIN ONLY APIs
 // Dump the existing ontology
 router.post('/dump', queryctrl.dump);
+router.post('/anyQueryAdmin', queryctrl.anyQueryAdmin);
 
 module.exports = router;

@@ -227,7 +227,7 @@ function getQueryForInstances(ontology, parent) {
         return parsed;
       })
       .catch(function (error) {
-        console.log("error - inner: ", error )
+        console.log("error - inner: ", error)
 
         return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
       });
@@ -271,7 +271,7 @@ function getQueryForInstancesOther(key) {
         return parsed;
       })
       .catch(function (error) {
-        console.log("error - inner: ", error )
+        console.log("error - inner: ", error)
 
         return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
       });
@@ -290,7 +290,7 @@ function getQueryForClassesWithChildren(rootKey) {
     SELECT distinct ?class ?label ?parent
     WHERE {
         ?class rdfs:label ?label .
-        ?class rdfs:subClassOf* <`+rootKey+`>.
+        ?class rdfs:subClassOf* <`+ rootKey + `>.
   		?class rdfs:subClassOf ?parent
     }
     order by ?class`;
@@ -315,7 +315,7 @@ function getQueryForClassesWithChildren(rootKey) {
         return parsed;
       })
       .catch(function (error) {
-        console.log("error - inner: ", error )
+        console.log("error - inner: ", error)
         return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
       });
 
@@ -342,7 +342,7 @@ function parseWithChildren(data, rootKey) {
   });
 
   var nodes = {}
-  var root = new Node(rootKey,rootKey, rootKey)
+  var root = new Node(rootKey, rootKey, rootKey)
   nodes[rootKey] = root;
 
   parse.forEach(c => {
@@ -353,7 +353,7 @@ function parseWithChildren(data, rootKey) {
   parse.forEach(c => {
     var temp = nodes[c.parent];
     // Only if a parent exists add it
-    if(temp){
+    if (temp) {
       temp.addChild(nodes[c.key])
     }
   })
@@ -380,33 +380,32 @@ module.exports.dump = async (req, res) => {
   if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
     console.log("Unauth access");
     res.status(400).json({ message: "Unauthorised Access!" })
+  } else {
+    let URLs = [
+      "http://semanticscience.org/ontology/sio.owl",
+      "http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl",
+      "http://www.w3.org/ns/prov-o#",
+      "https://raw.githubusercontent.com/tetherless-world/explanation-ontology/master/Ontologies/v2/explanation-ontology.owl",
+      "http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl",
+      // "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/iSeeOnto.owl",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/BehaviourTree.owl",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/SimilarityKnowledge.owl",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/aimethodevaluation.rdf",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/aimodel.rdf",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/evaluation.rdf",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/explainer.rdf",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/explanationexperience.rdf",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/user.rdf",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/userevaluation.rdf",
+      "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/workflow.rdf"
+    ];
+
+    getAllData(URLs).then(resp => {
+      res.status(200).json({ message: resp });
+    }).catch(e => {
+      res.status(500).json({ message: e });
+    })
   }
-
-  let URLs = [
-    "http://semanticscience.org/ontology/sio.owl",
-    "http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl",
-    "http://www.w3.org/ns/prov-o#",
-    "https://raw.githubusercontent.com/tetherless-world/explanation-ontology/master/Ontologies/v2/explanation-ontology.owl",
-    "http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl",
-    // "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/iSeeOnto.owl",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/BehaviourTree.owl",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/SimilarityKnowledge.owl",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/aimethodevaluation.rdf",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/aimodel.rdf",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/evaluation.rdf",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/explainer.rdf",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/explanationexperience.rdf",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/user.rdf",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/userevaluation.rdf",
-    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/workflow.rdf"
-  ];
-
-
-  getAllData(URLs).then(resp => {
-    res.status(200).json({ message: resp });
-  }).catch(e => {
-    res.status(500).json({ message: e });
-  })
 
 };
 
@@ -438,3 +437,48 @@ function fetchData(URL) {
       return "🛑 Error=> " + URL + " - " + JSON.stringify(error.response.data)
     });
 }
+
+
+module.exports.anyQueryAdmin = async (req, res) => {
+
+  if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
+    console.log("Unauth access");
+    res.status(400).json({ message: "Unauthorised Access!" });
+    return;
+  } else {
+    try {
+      const query = req.body.query;
+      console.log(query)
+
+      var data = qs.stringify({
+        'query': query
+      });
+      var config = {
+        method: 'post',
+        url: endpointUrl,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: data
+      };
+
+      return axios(config)
+        .then(function (response) {
+          console.log(response.data)
+          res.status(200).json({ response: response.data });
+        })
+        .catch(function (error) {
+          console.log("error - inner: ", error)
+          res.status(500).json({ error: error });
+
+          // return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+        });
+
+    } catch (error) {
+      return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+    }
+  }
+
+
+}
+
