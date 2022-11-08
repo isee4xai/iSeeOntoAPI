@@ -22,4 +22,8 @@ router.get('/UserIntent', queryctrl.getUserIntent);
 router.get('/UserDomain', queryctrl.getUserDomain);
 router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
 // router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
+
+// Dump the existing ontology
+router.post('/dump', queryctrl.dump);
+
 module.exports = router;

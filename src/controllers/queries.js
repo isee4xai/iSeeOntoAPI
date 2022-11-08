@@ -227,6 +227,8 @@ function getQueryForInstances(ontology, parent) {
         return parsed;
       })
       .catch(function (error) {
+        console.log("error - inner: ", error )
+
         return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
       });
 
@@ -269,6 +271,8 @@ function getQueryForInstancesOther(key) {
         return parsed;
       })
       .catch(function (error) {
+        console.log("error - inner: ", error )
+
         return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
       });
 
@@ -311,6 +315,7 @@ function getQueryForClassesWithChildren(rootKey) {
         return parsed;
       })
       .catch(function (error) {
+        console.log("error - inner: ", error )
         return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
       });
 
@@ -367,4 +372,69 @@ class Node {
   addChild(child) {
     this.children.push(child)
   }
+}
+
+
+module.exports.dump = async (req, res) => {
+
+  if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
+    console.log("Unauth access");
+    res.status(400).json({ message: "Unauthorised Access!" })
+  }
+
+  let URLs = [
+    "http://semanticscience.org/ontology/sio.owl",
+    "http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl",
+    "http://www.w3.org/ns/prov-o#",
+    "https://raw.githubusercontent.com/tetherless-world/explanation-ontology/master/Ontologies/v2/explanation-ontology.owl",
+    "http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl",
+    // "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/iSeeOnto.owl",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/BehaviourTree.owl",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/SimilarityKnowledge.owl",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/aimethodevaluation.rdf",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/aimodel.rdf",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/evaluation.rdf",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/explainer.rdf",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/explanationexperience.rdf",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/user.rdf",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/userevaluation.rdf",
+    "https://raw.githubusercontent.com/isee4xai/iSeeOnto/main/workflow.rdf"
+  ];
+
+
+  getAllData(URLs).then(resp => {
+    res.status(200).json({ message: resp });
+  }).catch(e => {
+    res.status(500).json({ message: e });
+  })
+
+};
+
+function getAllData(URLs) {
+  return Promise.all(URLs.map(fetchData));
+}
+
+function fetchData(URL) {
+  var data = qs.stringify({
+    'update': 'LOAD <' + URL + '>'
+  });
+  var config = {
+    method: 'post',
+    url: BASE_URL + 'update',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: data
+  };
+
+  return axios(config)
+    .then(function (response) {
+      console.log("✅ Success=> " + URL + " - ", JSON.stringify(response.data));
+      return "✅ Success=> " + URL + " - " + JSON.stringify(response.data)
+    })
+    .catch(function (error) {
+      console.log("🛑 Error=> ", error);
+      console.log("🛑 Error=> " + URL + " - ", JSON.stringify(error.response.data));
+      return "🛑 Error=> " + URL + " - " + JSON.stringify(error.response.data)
+    });
 }
