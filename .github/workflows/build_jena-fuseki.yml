@@ -32,3 +32,15 @@ jobs:
           file: './jena-fuseki/Dockerfile'
           context: './jena-fuseki'
           tags: isee4xai/jena-fuseki:dev
+          
+  deploy:
+    needs: build-image
+    runs-on: ubuntu-latest
+    name: Deploy on dev platform 
+    steps:
+      - uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_url: ${{ secrets.WEBHOOK_URL_DEV }}
+          webhook_secret: ${{ secrets.WEBHOOK_TOKEN_DEV }}
+          data: '{"DOCKER_PULL_SERVICES":"isee-onto-fuseki"}'
+          webhook_type: 'json-extended'
