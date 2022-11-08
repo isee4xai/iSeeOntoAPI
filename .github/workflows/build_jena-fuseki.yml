@@ -6,7 +6,7 @@ on:
     paths: 
       - 'jena-fuseki/**'
   
-  workflow-dispatch:
+  workflow_dispatch:
 
     
 
