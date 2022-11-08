@@ -21,5 +21,5 @@ router.get('/UserQuestionTarget', queryctrl.getUserQuestionTarget);
 router.get('/UserIntent', queryctrl.getUserIntent);
 router.get('/UserDomain', queryctrl.getUserDomain);
 router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
-router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
+// router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
 module.exports = router;
