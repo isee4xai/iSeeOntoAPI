@@ -24,6 +24,10 @@ router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
 // router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
 
 
+// Cockpit Required APIs
+router.get('/cockpit/Usecases', queryctrl.getCockpitUsecases);
+
+
 // ADMIN ONLY APIs
 // Dump the existing ontology
 router.post('/dump', queryctrl.dump);

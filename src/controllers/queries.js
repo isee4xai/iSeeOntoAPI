@@ -8,10 +8,12 @@ require('dotenv').config();
 const BASE_URL = process.env.SPAQRL_ENDPOINT;
 const endpointUrl = BASE_URL + 'sparql'
 
+const SHARED_KEYS = { AI_TASK: 'https://purl.org/heals/eo#AITask', AI_METHOD: 'https://purl.org/heals/eo#ArtificialIntelligenceMethod' }
+
 // Get AI Task - SN <https://purl.org/heals/eo#AITask>
 module.exports.getAITasks = async (req, res) => {
   try {
-    getQueryForClassesWithChildren('https://purl.org/heals/eo#AITask').then(function (response) {
+    getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK).then(function (response) {
       res.status(200).json(response)
     }).catch(function (error) {
       console.log(error);
@@ -26,7 +28,7 @@ module.exports.getAITasks = async (req, res) => {
 // Get AI Task - SN <https://purl.org/heals/eo#ArtificialIntelligenceMethod>
 module.exports.getAIMethods = async (req, res) => {
   try {
-    getQueryForClassesWithChildren('https://purl.org/heals/eo#ArtificialIntelligenceMethod').then(function (response) {
+    getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD).then(function (response) {
       res.status(200).json(response)
     }).catch(function (error) {
       console.log(error);
@@ -193,6 +195,43 @@ module.exports.getKnowledgeLevel = async (req, res) => {
   }
 };
 
+
+// getCockpitUsecases 
+
+module.exports.getCockpitUsecases = async (req, res) => {
+  try {
+
+    let output = {
+      AI_TASK: [],
+      AI_METHOD: [],
+      DATA_TYPE: [],
+      DATASET_TYPE: [],
+      AI_MODEL_A_METRIC: [],
+      AI_MODEL_A_METRIC: [],
+      KNOWLEDGE_LEVEL: []
+    }
+
+    output.AI_TASK = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
+
+    output.AI_METHOD = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
+
+    output.DATA_TYPE = await getQueryForInstances('explainer', 'DataType');
+  
+    output.DATASET_TYPE = await getQueryForInstances('explainer', 'DatasetType');
+
+    output.AI_MODEL_A_METRIC = await getQueryForInstances('aimodelevaluation', 'AIModelAssessmentMetric');
+  
+    output.KNOWLEDGE_LEVEL = await getQueryForInstances('user', 'KnowledgeLevel');
+
+
+    res.status(200).json(output)
+
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+
 // HELPER FUNCTIONS
 function getQueryForInstances(ontology, parent) {
 
@@ -201,7 +240,7 @@ function getQueryForInstances(ontology, parent) {
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?class ?label
+    SELECT distinct ?class ?label
     WHERE {
         ?class rdf:type <http://www.w3id.org/iSeeOnto/`+ ontology + `#` + parent + `> .
         ?class rdfs:label ?label .
@@ -246,7 +285,7 @@ function getQueryForInstancesOther(key) {
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?class ?label
+    SELECT distinct ?class ?label
     WHERE {
         ?class rdf:type <`+ key + `> .
         ?class rdfs:label ?label .
