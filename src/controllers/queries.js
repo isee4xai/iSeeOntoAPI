@@ -243,6 +243,28 @@ module.exports.getExplainerFields = async (req, res) => {
   }
 };
 
+module.exports.getDialogFields = async (req, res) => {
+  try {
+
+    let output = {
+      KnowledgeLevel: [],
+      UserIntent: [],
+      ExplanationTarget: [],
+    }
+  
+    output.KnowledgeLevel = await getQueryForInstances('user', 'KnowledgeLevel');
+
+    output.UserIntent = await getQueryForInstancesOther('http://semanticscience.org/resource/SIO_000358');
+
+    output.ExplanationTarget = await getQueryForInstances('explainer', 'ExplanationTarget');
+    
+    res.status(200).json(output)
+
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
 // getCockpitUsecases 
 module.exports.getCockpitUsecases = async (req, res) => {
   try {

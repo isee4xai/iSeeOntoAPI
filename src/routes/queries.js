@@ -27,6 +27,7 @@ router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
 // Cockpit Required APIs
 router.get('/cockpit/Usecases', queryctrl.getCockpitUsecases);
 router.get('/cockpit/ExplainerFields', queryctrl.getExplainerFields);
+router.get('/cockpit/DialogFields', queryctrl.getDialogFields);
 
 
 // ADMIN ONLY APIs
