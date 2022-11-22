@@ -216,9 +216,9 @@ module.exports.getExplainerFields = async (req, res) => {
     }
 
     output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-    
+
     output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-  
+
     output.DatasetType = await getQueryForInstances('explainer', 'DatasetType');
 
     output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
@@ -230,16 +230,16 @@ module.exports.getExplainerFields = async (req, res) => {
     output.Portability = await getQueryForInstances('explainer', 'Portability');
 
     output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
-    
+
     output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
-    
+
     output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
 
     output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
 
     output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
 
-    output.AITask= await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
+    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
 
     res.status(200).json(output)
 
@@ -256,13 +256,13 @@ module.exports.getDialogFields = async (req, res) => {
       UserIntent: [],
       ExplanationTarget: [],
     }
-  
+
     output.KnowledgeLevel = await getQueryForInstances('user', 'KnowledgeLevel');
 
     output.UserIntent = await getQueryForInstancesOther('http://semanticscience.org/resource/SIO_000358');
 
     output.ExplanationTarget = await getQueryForInstances('explainer', 'ExplanationTarget');
-    
+
     res.status(200).json(output)
 
   } catch (error) {
@@ -289,11 +289,11 @@ module.exports.getCockpitUsecases = async (req, res) => {
     output.AI_METHOD = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
 
     output.DATA_TYPE = await getQueryForInstances('explainer', 'DataType');
-  
+
     output.DATASET_TYPE = await getQueryForInstances('explainer', 'DatasetType');
 
     output.AI_MODEL_A_METRIC = await getQueryForInstances('aimodelevaluation', 'AIModelAssessmentMetric');
-  
+
     output.KNOWLEDGE_LEVEL = await getQueryForInstances('user', 'KnowledgeLevel');
 
 
@@ -599,101 +599,98 @@ module.exports.anyQueryAdmin = async (req, res) => {
 
 
 // auxiliar functions to insert multiple values for some object properties
-function getMultipleSelectValues (object_property, my_multiple_select_values){
-	var my_values = "";
-	
-	if (object_property === "imp_framework_text"){
-		for (var i = 0; i < my_multiple_select_values.length; i++){
-			my_values += `VALUES ?` + object_property + i + ` { "` + my_multiple_select_values[i] + `" } . \n`;
-		}
-	} else{
-		for (var i = 0; i < my_multiple_select_values.length; i++){
-			my_values += `VALUES ?` + object_property + i + ` { "` + my_multiple_select_values[i][my_multiple_select_values[i].length - 1] + `" } . \n`;
-		}	
-	};
-	
-	return my_values;
+function getMultipleSelectValues(object_property, my_multiple_select_values) {
+  var my_values = "";
+
+  if (object_property === "imp_framework_text") {
+    for (var i = 0; i < my_multiple_select_values.length; i++) {
+      my_values += `VALUES ?` + object_property + i + ` { "` + my_multiple_select_values[i] + `" } . \n`;
+    }
+  } else {
+    for (var i = 0; i < my_multiple_select_values.length; i++) {
+      my_values += `VALUES ?` + object_property + i + ` { "` + my_multiple_select_values[i][my_multiple_select_values[i].length - 1] + `" } . \n`;
+    }
+  };
+
+  return my_values;
 }
 
 
-function getInsertionMultipleValues (object_property, my_multiple_select_values){
-	var my_values = "";
-	var my_prefix = "";
-	
-	console.log("hola");
-	if (object_property === "output_text"){
-		my_prefix = `pur:hasPresentation ?expoutput`;
-	} else if (object_property === "imp_framework_text"){
-		my_prefix = `exp:hasBackend ?imp_framework`;
-	} else if (object_property === "aimethod_class_text"){
-		my_prefix = `exp:hasApplicableMethodType ?aimethod_class`;
-	} else if (object_property === "aitask_class_text"){
-		my_prefix = `exp:applicableProblemType ?aitask_class`;
-	}
-	
-	for (var i = 0; i < my_multiple_select_values.length; i++){
-		my_values += my_prefix + i + ` ; \n`;
-	};
-	
-	
-	return my_values;
+function getInsertionMultipleValues(object_property, my_multiple_select_values) {
+  var my_values = "";
+  var my_prefix = "";
+
+  console.log("hola");
+  if (object_property === "output_text") {
+    my_prefix = `pur:hasPresentation ?expoutput`;
+  } else if (object_property === "imp_framework_text") {
+    my_prefix = `exp:hasBackend ?imp_framework`;
+  } else if (object_property === "aimethod_class_text") {
+    my_prefix = `exp:hasApplicableMethodType ?aimethod_class`;
+  } else if (object_property === "aitask_class_text") {
+    my_prefix = `exp:applicableProblemType ?aitask_class`;
+  }
+
+  for (var i = 0; i < my_multiple_select_values.length; i++) {
+    my_values += my_prefix + i + ` ; \n`;
+  };
+
+  return my_values;
 };
 
 
-function getBindMultipleValues (object_property, my_multiple_select_values){
-	var my_values = "";
-	//var my_bind_text = "";
-	var my_bind	= "";
-	
-	//console.log("hola");
-	if (object_property === "output_text"){
-		my_bind = `?expoutput`;
-	} else if (object_property === "imp_framework_text"){
-		my_bind = `?imp_framework`;
-	} else if (object_property === "aimethod_class_text"){
-		my_bind = `?aimethod_class`;
-	} else if (object_property === "aitask_class_text"){
-		my_bind = `?aitask_class`;
-	}
-	
-	for (var i = 0; i < my_multiple_select_values.length; i++){
-		my_values += `BIND( IRI(?` + object_property + i + `) as ` + my_bind + i + `) . \n`;
-	};
-	
-	
-	return my_values;
+function getBindMultipleValues(object_property, my_multiple_select_values) {
+  var my_values = "";
+  //var my_bind_text = "";
+  var my_bind = "";
+
+  //console.log("hola");
+  if (object_property === "output_text") {
+    my_bind = `?expoutput`;
+  } else if (object_property === "imp_framework_text") {
+    my_bind = `?imp_framework`;
+  } else if (object_property === "aimethod_class_text") {
+    my_bind = `?aimethod_class`;
+  } else if (object_property === "aitask_class_text") {
+    my_bind = `?aitask_class`;
+  }
+
+  for (var i = 0; i < my_multiple_select_values.length; i++) {
+    my_values += `BIND( IRI(?` + object_property + i + `) as ` + my_bind + i + `) . \n`;
+  };
+
+  return my_values;
 };
 
 // http://localhost:3100/api/onto/getExplainers
 /// insert an explainer into the ontology
 // http://localhost:3100/api/onto/getExplainers
 module.exports.insertExplainer = async (req, res) => {
-	
-	if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
-		console.log("Unauth access");
-		res.status(400).json({ message: "Unauthorised Access!" });
-		return;
-	  } else {
-		  const data = req.body.data; // json body
-		 
-		  try {
-			var presentations = getMultipleSelectValues("output_text", data.presentations);
-			var implementation = getMultipleSelectValues("imp_framework_text", data.implementation);
-			var ai_method = getMultipleSelectValues("aimethod_class_text", data.ai_methods);
-			var ai_task = getMultipleSelectValues("aitask_class_text", data.ai_tasks);			
-			
-			var presentations_insert = getInsertionMultipleValues("output_text", data.presentations);
-			var implementation_insert = getInsertionMultipleValues("imp_framework_text", data.implementation);
-			var ai_method_insert = getInsertionMultipleValues("aimethod_class_text", data.ai_methods);
-			var ai_task_insert = getInsertionMultipleValues("aitask_class_text", data.ai_tasks);
-			
-			var presentations_bind = getBindMultipleValues("output_text", data.presentations);
-			var implementation_bind = getBindMultipleValues("imp_framework_text", data.implementation);
-			var ai_method_bind = getBindMultipleValues("aimethod_class_text", data.ai_methods);
-			var ai_task_bind = getBindMultipleValues("aitask_class_text", data.ai_tasks);
-			 			
-			
-			const query = `
+
+  if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
+    console.log("Unauth access");
+    res.status(400).json({ message: "Unauthorised Access!" });
+    return;
+  } else {
+    const data = req.body.data; // json body
+
+    try {
+      var presentations = getMultipleSelectValues("output_text", data.presentations);
+      var implementation = getMultipleSelectValues("imp_framework_text", data.implementation);
+      var ai_method = getMultipleSelectValues("aimethod_class_text", data.ai_methods);
+      var ai_task = getMultipleSelectValues("aitask_class_text", data.ai_tasks);
+
+      var presentations_insert = getInsertionMultipleValues("output_text", data.presentations);
+      var implementation_insert = getInsertionMultipleValues("imp_framework_text", data.implementation);
+      var ai_method_insert = getInsertionMultipleValues("aimethod_class_text", data.ai_methods);
+      var ai_task_insert = getInsertionMultipleValues("aitask_class_text", data.ai_tasks);
+
+      var presentations_bind = getBindMultipleValues("output_text", data.presentations);
+      var implementation_bind = getBindMultipleValues("imp_framework_text", data.implementation);
+      var ai_method_bind = getBindMultipleValues("aimethod_class_text", data.ai_methods);
+      var ai_task_bind = getBindMultipleValues("aitask_class_text", data.ai_tasks);
+
+      const query = `
 			
 			prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
 				prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -714,7 +711,7 @@ module.exports.insertExplainer = async (req, res) => {
 									   exp:hasPortability ?portability ; 
 									   exp:targetType ?target_type ; 
 									   exp:hasOutputType  ?explanation_type_class ; 
-									   ` + presentations_insert + implementation_insert + ai_method_insert + ai_task_insert +  `
+									   ` + presentations_insert + implementation_insert + ai_method_insert + ai_task_insert + `
 									   exp:hasComplexity ?complexity .
 								
 								
@@ -733,17 +730,17 @@ module.exports.insertExplainer = async (req, res) => {
 			
 					# this is the block of values we have to change for each insertion
 					VALUES ?exp_tech_type_text { "`+ data.technique[data.technique.length - 1] + `" } . # we have to edit here the type of the explainability technique
-					VALUES ?comment_metadata { `+ JSON.stringify(data.metadata)+` } .
-					VALUES ?comment_explainer_description { "`+ data.explainer_description +`" } .
-					VALUES ?comment_explanation_description { "`+ data.explanation_description +`" } .
-					VALUES ?dataset_type_text { "`+ data.dataset_type +`" } .
-					VALUES ?concur_text { "`+ data.concurrentness +`" } .
-					VALUES ?scope_text { "`+ data.scope +`" } .
-					VALUES ?port_text { "`+ data.portability +`" } .
-					VALUES ?target_text { "`+ data.target +`" } .
-					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" +`" } .
-					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') +`" } . ` + presentations + `VALUES ?complexity_text { "`+ data.complexity +`" } . 
-					` + implementation + `VALUES ?explanation_type_class_text { "`+ data.explanation_type[data.explanation_type.length - 1] +`" } . 
+					VALUES ?comment_metadata { `+ JSON.stringify(data.metadata) + ` } .
+					VALUES ?comment_explainer_description { "`+ data.explainer_description + `" } .
+					VALUES ?comment_explanation_description { "`+ data.explanation_description + `" } .
+					VALUES ?dataset_type_text { "`+ data.dataset_type + `" } .
+					VALUES ?concur_text { "`+ data.concurrentness + `" } .
+					VALUES ?scope_text { "`+ data.scope + `" } .
+					VALUES ?port_text { "`+ data.portability + `" } .
+					VALUES ?target_text { "`+ data.target + `" } .
+					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
+					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') + `" } . ` + presentations + `VALUES ?complexity_text { "` + data.complexity + `" } . 
+					` + implementation + `VALUES ?explanation_type_class_text { "` + data.explanation_type[data.explanation_type.length - 1] + `" } . 
 					` + ai_method + ai_task + `	
 					BIND( IRI(?exp_tech_type_text) as ?explainability_technique) .
 					BIND( IRI(?dataset_type_text) as ?datasetType) .
@@ -759,49 +756,35 @@ module.exports.insertExplainer = async (req, res) => {
 					BIND( IRI(?explanation_type_class_text) as ?explanation_type_class) . 
 					` + presentations_bind + implementation_bind + ai_method_bind + ai_task_bind + `					
 				}	
-							
 				`;
-				
-				
-				console.log(query);
-				
-				  
-				  var dataquery = qs.stringify({
-  'update': query
-});
-				
-				console.log(query);
-				
-				var config = {
-					method: 'post',
-					url: BASE_URL + 'update',
-					headers: {
-					  'Content-Type': 'application/x-www-form-urlencoded'
-					},
-					data: dataquery
-				  };
-				
-				
-				
-				
-				return axios(config)
-					.then(function (response) {
-					  console.log(response.data)
-					  res.status(200).json({ response: response.data });
-					})
-					.catch(function (error) {
-					  console.log("error - inner: ", error)
-					  res.status(500).json({ error: error });
 
-					  // return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
-					});
-				
+      var dataquery = qs.stringify({
+        'update': query
+      });
 
-		  } catch (error) {
-			return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
-		  }
+      var config = {
+        method: 'post',
+        url: BASE_URL + 'update',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: dataquery
+      };
+
+      return axios(config)
+        .then(function (response) {
+          res.status(200).json({ response: response.data });
+        })
+        .catch(function (error) {
+          console.log("error - inner: ", error)
+          res.status(500).json({ error: error });
+        });
+
+    } catch (error) {
+      return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+    }
   }
-	
+
 }
 
 
