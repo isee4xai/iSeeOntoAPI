@@ -34,5 +34,6 @@ router.get('/cockpit/DialogFields', queryctrl.getDialogFields);
 // Dump the existing ontology
 router.post('/dump', queryctrl.dump);
 router.post('/anyQueryAdmin', queryctrl.anyQueryAdmin);
+router.post('/insertExplainer', queryctrl.insertExplainer); // adding a new explainer into the ontology
 
 module.exports = router;
