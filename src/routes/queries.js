@@ -22,13 +22,17 @@ router.get('/UserIntent', queryctrl.getUserIntent);
 router.get('/UserDomain', queryctrl.getUserDomain);
 router.get('/KnowledgeLevel', queryctrl.getKnowledgeLevel);
 // router.get('/TechnicalFacilities', queryctrl.getTechnicalFacilities);
-router.get('/getExplainers', queryctrl.getExplainer);
+
+
+// Cockpit Required APIs
+router.get('/cockpit/Usecases', queryctrl.getCockpitUsecases);
+router.get('/cockpit/ExplainerFields', queryctrl.getExplainerFields);
+router.get('/cockpit/DialogFields', queryctrl.getDialogFields);
 
 
 // ADMIN ONLY APIs
 // Dump the existing ontology
 router.post('/dump', queryctrl.dump);
 router.post('/anyQueryAdmin', queryctrl.anyQueryAdmin);
-router.post('/insertExplainer', queryctrl.insertExplainer); // adding a new explainer into the ontology
 
 module.exports = router;
