@@ -211,7 +211,8 @@ module.exports.getExplainerFields = async (req, res) => {
       InformationContentEntity: [],
       ComputationalComplexity: [],
       AIMethod: [],
-      AITask: []
+      AITask: [],
+      Implementation_Framework: []
     }
 
     output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
@@ -230,6 +231,10 @@ module.exports.getExplainerFields = async (req, res) => {
 
     output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
     
+    output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
+    
+    output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
+
     output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
 
     output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
