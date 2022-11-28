@@ -748,7 +748,7 @@ module.exports.insertExplainer = async (req, res) => {
 					BIND( IRI(?scope_text) as ?scope) .
 					BIND( IRI(?port_text) as ?portability) .
 					BIND( IRI(?target_text) as ?target_type) .
-					BIND( IRI(?tech_text) as ?technique) . 
+					BIND( IRI(CONCAT(?isee,?tech_text)) as ?technique) . 
 					BIND( IRI(CONCAT(?isee,?exp_text)) as ?explainer) .
 					BIND( IRI(?complexity_text) as ?complexity) .
 					BIND( IRI(?aimethod_text) as ?aimethod) .
