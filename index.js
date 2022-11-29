@@ -5,6 +5,7 @@ const express = require('express');
 const SPAQRL_ENDPOINT = process.env.SPAQRL_ENDPOINT;
 
 const queries = require('./src/routes/queries');
+const explainers = require('./src/routes/explainers');
 
 const app = express();
 const PORT = process.env.PORT || 3100;
@@ -28,3 +29,4 @@ app.listen(PORT, () => {
 });
 
 app.use('/api/onto/', queries);
+app.use('/api/explainers/', explainers);
