@@ -305,6 +305,19 @@ module.exports.getCockpitUsecases = async (req, res) => {
 };
 
 
+module.exports.getCockpitExplainers = async (req, res) => {
+  try {
+    getQueryForInstances('explainer', 'Explainer').then(function (response) {
+      res.status(200).json(response)
+    }).catch(function (error) {
+      console.log(error);
+      res.status(500).json(error);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
 
 // HELPER FUNCTIONS
 function getQueryForInstances(ontology, parent) {
@@ -702,7 +715,7 @@ module.exports.insertExplainer = async (req, res) => {
 
 				INSERT {
 								  
-					?technique rdf:label ?tech_text ;
+					?technique rdfs:label ?tech_text ;
 									   rdf:type ?explainability_technique ; 
 									   rdf:type owl:NamedIndividual ; 
 									   exp:isCompatibleWithFeatureTypes ?datasetType ; 
@@ -715,7 +728,7 @@ module.exports.insertExplainer = async (req, res) => {
 									   exp:hasComplexity ?complexity .
 								
 								
-					?explainer rdf:label ?exp_text ;
+					?explainer rdfs:label ?exp_text ;
 							   rdfs:comment ?comment_metadata ;
 							   rdfs:comment ?comment_explainer_description ;
 							   rdfs:comment ?comment_explanation_description ;
