@@ -22,6 +22,16 @@ module.exports.list = async (req, res) => {
     }
   };
 
+function selectMultipleVar(variable_count, current_content, variable_content){
+  var variable_name = "";
+  if (variable_count == 0){
+    variable_name = variable_content;
+  } else {
+    variable_name = current_content + ", " + variable_content;
+  }
+  return variable_name;
+}
+
 
 function getQueryexplainers() {
 
@@ -72,20 +82,125 @@ function getQueryexplainers() {
           var vals = {
             name: "",
             explainer_description: "",
+            explainability_technique: "",
             dataset_type: "",
             explanation_type: "",
-            explanation_description: ""
+            explanation_description: "",
+            concurrentness: "",
+            portability: "",
+            scope: "",
+            target: "",
+            presentation_format: "",
+            computational_complexity: "",
+            ai_methods: "",
+            ai_tasks: "",
+            implementation_framework: "",
+            metadata: ""
           }
+
+          var presentations_count = 0;
+          var ai_methods_count = 0;
+          var ai_tasks_count = 0;
+          var backend_count = 0;
+
           list_keyed[instance].forEach(p => {
             // Per Property
             // Name
             if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#label"){
-              var name = p.value.value.replaceAll('_', '/')
+              var name = p.value.value.replace('_', '/').replace('_', '/');
               if(!name.includes('technique')){
-                vals.name = name
+                vals.name = name;
               }
             }
 
+            // Description
+            if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment"){
+              var description = p.value.value;
+              if(description.includes('EXPLAINER_DESCRIPTION')){
+                vals.explainer_description = description.substring(description.indexOf('=') + 1);
+              }
+            }
+
+            // ExplainabilityTechnique
+            if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#label"){
+              if(p.value.value.includes('technique')){
+                vals.explainability_technique = vals.name + "_technique";
+              }
+            }
+
+            // Dataset Type
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#isCompatibleWithFeatureTypes"){
+              vals.dataset_type = p.value.value;
+            }
+
+            // Explanation Type
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasOutputType"){
+              vals.explanation_type = p.value.value;
+            }
+
+            // Explanation Description
+            if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment"){
+              var description = p.value.value;
+              if(description.includes('EXPLANATION_DESCRIPTION')){
+                vals.explanation_description = description.substring(description.indexOf('=') + 1);
+              }
+            }
+
+            // Explainer Concurrentness
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasConcurrentness"){
+              vals.concurrentness = p.value.value;
+            }
+
+            // Explainer Portability
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasPortability"){
+              vals.portability = p.value.value;
+            }
+
+            // Explanation Scope
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasExplanationScope"){
+              vals.scope = p.value.value;
+            }
+
+            // Explanation Target
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#targetType"){
+              vals.target = p.value.value;
+            }
+
+            // Presentation Format
+            if(p.property.value == "https://purl.org/heals/eo#hasPresentation"){
+              vals.presentation_format = selectMultipleVar(presentations_count, vals.presentation_format, p.value.value);  
+              presentations_count++;
+            }
+
+            // Computational Complexity
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasComplexity"){
+              vals.computational_complexity = p.value.value;
+            }
+
+            // Applicable AI Methods
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasApplicableMethodType"){
+              vals.ai_methods = selectMultipleVar(ai_methods_count, vals.ai_methods, p.value.value);  
+              ai_methods_count++;
+            }
+
+            // Applicable AI Tasks
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#applicableProblemType"){
+              vals.ai_tasks = selectMultipleVar(ai_tasks_count, vals.ai_tasks, p.value.value);  
+              ai_tasks_count++;
+            }
+            // Implementation Framework	
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasBackend"){
+              vals.implementation_framework = selectMultipleVar(backend_count, vals.implementation_framework, p.value.value);  
+              backend_count++;
+            }
+
+            // Metadata
+            if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment"){
+              var metadata = p.value.value;
+              if(metadata.includes('META_DESCRIPTION')){
+                vals.metadata = metadata.substring(metadata.indexOf('=') + 1);
+              }
+            }
   
           })
           console.log(vals)
