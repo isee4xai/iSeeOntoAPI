@@ -57,8 +57,44 @@ function getQueryexplainers() {
     return axios(config)
       .then(function (response) {
         console.log(response.data.results.bindings)
-        const parsed = parseClasses(response);
-        return parsed;
+        var all_values = response.data.results.bindings;
+        var list_keyed = {}
+        all_values.forEach(single => {
+          if (!list_keyed[single.class.value]) {
+            list_keyed[single.class.value] = []
+          }
+          list_keyed[single.class.value].push(single)
+        });
+
+        var data = []
+        for (let instance in list_keyed) {
+          // Per Instance
+          var vals = {
+            name: "",
+            explainer_description: "",
+            dataset_type: "",
+            explanation_type: "",
+            explanation_description: ""
+          }
+          list_keyed[instance].forEach(p => {
+            // Per Property
+            // Name
+            if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#label"){
+              var name = p.value.value.replaceAll('_', '/')
+              if(!name.includes('technique')){
+                vals.name = name
+              }
+            }
+
+  
+          })
+          console.log(vals)
+
+        }
+
+
+        // const parsed = parseClasses(response);
+        return list_keyed;
       })
       .catch(function (error) {
         console.log("error - inner: ", error)
@@ -290,7 +326,7 @@ module.exports.insertExplainer = async (req, res) => {
 			
 					# this is the block of values we have to change for each insertion
 					VALUES ?exp_tech_type_text { "`+ data.technique[data.technique.length - 1] + `" } . # we have to edit here the type of the explainability technique
-					VALUES ?comment_metadata { "META_DESCRIPTION=`+  JSON.stringify(data.metadata).substring(1)  + ` } .
+					VALUES ?comment_metadata { "META_DESCRIPTION=`+ JSON.stringify(data.metadata).substring(1) + ` } .
 					VALUES ?comment_explainer_description { "EXPLAINER_DESCRIPTION=`+ data.explainer_description + `" } .
 					VALUES ?comment_explanation_description { "EXPLANATION_DESCRIPTION=`+ data.explanation_description + `" } .
 					VALUES ?dataset_type_text { "`+ data.dataset_type + `" } .
@@ -318,8 +354,8 @@ module.exports.insertExplainer = async (req, res) => {
 				}	
 				`;
 
-            console.log(query)
-            
+      console.log(query)
+
       var dataquery = qs.stringify({
         'update': query
       });
