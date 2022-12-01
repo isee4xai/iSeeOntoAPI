@@ -32,7 +32,6 @@ function selectMultipleVar(variable_count, current_content, variable_content){
   return variable_name;
 }
 
-
 function getQueryexplainers() {
 
   try {
@@ -52,6 +51,91 @@ function getQueryexplainers() {
     }
     `;
 
+    /*const query = `
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+    
+    SELECT * WHERE 
+    {
+      {
+        SELECT *
+        WHERE {
+            ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
+            exp:utilises ?utilises.
+            {?class ?property ?value}
+            UNION 
+            {
+            ?utilises ?property ?value
+            }
+        }
+      }
+      UNION
+      {
+        SELECT ?utilises
+        WHERE {
+          ?class_eplainer exp:utilises ?utilises 
+        }
+      }*/
+
+
+      // works
+      /*const query = `
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+      
+      SELECT *
+      WHERE {
+          ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
+          exp:utilises ?utilises.
+          {?class ?property ?value}
+          UNION 
+          {
+          ?utilises ?property ?value
+          }.
+          {?value rdfs:label ?label}
+      }
+      `;*/
+
+      /*const query = `
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+      
+      SELECT *
+      WHERE {
+          ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
+                exp:utilises ?utilises.
+          {?class ?property ?label} # get the class
+          UNION
+          {
+            ?utilises ?property ?value # get the properties          
+          
+          }
+          {?utilises ?property ?label}    
+          UNION
+          {
+            ?value rdfs:label ?label
+          } 
+
+      }
+      `; */
+
+    /*const query = `
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+      
+      SELECT ?property ?value 
+      WHERE {
+          ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
+                  exp:utilises ?utilises.
+          ?utilises ?property ?value.
+          ?value rdfs:label ?label.
+          FILTER(LANGMATCHES(LANG(?label), 'en'))
+          #{?y rdfs:label ?value. FILTER(isIRI(?y))} UNION
+          #{BIND(STR(?y) AS ?value). FILTER(!isIRI(?y))}
+
+      }
+      `;*/
+
     var data = qs.stringify({
       'query': query
     });
@@ -66,6 +150,7 @@ function getQueryexplainers() {
 
     return axios(config)
       .then(function (response) {
+        
         console.log(response.data.results.bindings)
         var all_values = response.data.results.bindings;
         var list_keyed = {}
@@ -122,9 +207,9 @@ function getQueryexplainers() {
             }
 
             // ExplainabilityTechnique
-            if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#label"){
-              if(p.value.value.includes('technique')){
-                vals.explainability_technique = vals.name + "_technique";
+            if(p.property.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"){
+              if(!p.value.value.includes('NamedIndividual')){
+                vals.explainability_technique = p.value.value;
               }
             }
 
@@ -198,7 +283,7 @@ function getQueryexplainers() {
             if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment"){
               var metadata = p.value.value;
               if(metadata.includes('META_DESCRIPTION')){
-                vals.metadata = metadata.substring(metadata.indexOf('=') + 1);
+                vals.metadata = JSON.parse(metadata.substring(metadata.indexOf('=') + 1));
               }
             }
   
@@ -210,6 +295,7 @@ function getQueryexplainers() {
 
         // const parsed = parseClasses(response);
         return list_keyed;
+        
       })
       .catch(function (error) {
         console.log("error - inner: ", error)
