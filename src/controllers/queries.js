@@ -281,7 +281,10 @@ module.exports.getCockpitUsecases = async (req, res) => {
       DATASET_TYPE: [],
       AI_MODEL_A_METRIC: [],
       AI_MODEL_A_METRIC: [],
-      KNOWLEDGE_LEVEL: []
+      KNOWLEDGE_LEVEL: [],
+      IMPLEMENTATION_FRAMEWORK: [],
+      FEATURE_RANGE: [],
+      INSTANCE_RANGE: []
     }
 
     output.AI_TASK = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
@@ -295,7 +298,12 @@ module.exports.getCockpitUsecases = async (req, res) => {
     output.AI_MODEL_A_METRIC = await getQueryForInstances('aimodelevaluation', 'AIModelAssessmentMetric');
 
     output.KNOWLEDGE_LEVEL = await getQueryForInstances('user', 'KnowledgeLevel');
+    
+    output.IMPLEMENTATION_FRAMEWORK = await getQueryForInstances('explainer', 'Implementation_Framework');
 
+    output.FEATURE_RANGE = await getQueryForInstances('aimodel','Dataset_Feature_Quantity_Range' );
+
+    output.INSTANCE_RANGE = await getQueryForInstances('aimodel','Dataset_Instance_Quantity_Range' );
 
     res.status(200).json(output)
 
