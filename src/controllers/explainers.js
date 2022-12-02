@@ -48,93 +48,9 @@ function getQueryexplainers() {
         {
         ?utilises ?property ?value
         }
+        # {?value rdfs:label ?label} 
     }
     `;
-
-    /*const query = `
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
-    
-    SELECT * WHERE 
-    {
-      {
-        SELECT *
-        WHERE {
-            ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
-            exp:utilises ?utilises.
-            {?class ?property ?value}
-            UNION 
-            {
-            ?utilises ?property ?value
-            }
-        }
-      }
-      UNION
-      {
-        SELECT ?utilises
-        WHERE {
-          ?class_eplainer exp:utilises ?utilises 
-        }
-      }*/
-
-
-      // works
-      /*const query = `
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
-      
-      SELECT *
-      WHERE {
-          ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
-          exp:utilises ?utilises.
-          {?class ?property ?value}
-          UNION 
-          {
-          ?utilises ?property ?value
-          }.
-          {?value rdfs:label ?label}
-      }
-      `;*/
-
-      /*const query = `
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
-      
-      SELECT *
-      WHERE {
-          ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
-                exp:utilises ?utilises.
-          {?class ?property ?label} # get the class
-          UNION
-          {
-            ?utilises ?property ?value # get the properties          
-          
-          }
-          {?utilises ?property ?label}    
-          UNION
-          {
-            ?value rdfs:label ?label
-          } 
-
-      }
-      `; */
-
-    /*const query = `
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
-      
-      SELECT ?property ?value 
-      WHERE {
-          ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
-                  exp:utilises ?utilises.
-          ?utilises ?property ?value.
-          ?value rdfs:label ?label.
-          FILTER(LANGMATCHES(LANG(?label), 'en'))
-          #{?y rdfs:label ?value. FILTER(isIRI(?y))} UNION
-          #{BIND(STR(?y) AS ?value). FILTER(!isIRI(?y))}
-
-      }
-      `;*/
 
     var data = qs.stringify({
       'query': query
