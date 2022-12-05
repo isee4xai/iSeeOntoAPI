@@ -22,15 +22,15 @@ module.exports.list = async (req, res) => {
     }
   };
 
-function selectMultipleVar(variable_count, current_content, variable_content){
-  var variable_name = "";
-  if (variable_count == 0){
-    variable_name = variable_content;
-  } else {
-    variable_name = current_content + ", " + variable_content;
-  }
-  return variable_name;
-}
+// function selectMultipleVar(variable_count, current_content, variable_content){
+//   var variable_name = "";
+//   if (variable_count == 0){
+//     variable_name = variable_content;
+//   } else {
+//     variable_name = current_content + ", " + variable_content;
+//   }
+//   return variable_name;
+// }
 
 function getQueryexplainers() {
 
@@ -83,7 +83,7 @@ function getQueryexplainers() {
           var vals = {
             name: "",
             explainer_description: "",
-            explainability_technique: "",
+            technique: "",
             dataset_type: "",
             explanation_type: "",
             explanation_description: "",
@@ -91,18 +91,13 @@ function getQueryexplainers() {
             portability: "",
             scope: "",
             target: "",
-            presentation_format: "",
+            presentations: [],
             computational_complexity: "",
-            ai_methods: "",
-            ai_tasks: "",
-            implementation_framework: "",
+            ai_methods: [],
+            ai_tasks: [],
+            implementation: [],
             metadata: ""
           }
-
-          var presentations_count = 0;
-          var ai_methods_count = 0;
-          var ai_tasks_count = 0;
-          var backend_count = 0;
 
           list_keyed[instance].forEach(p => {
             // Per Property
@@ -125,7 +120,7 @@ function getQueryexplainers() {
             // ExplainabilityTechnique
             if(p.property.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"){
               if(!p.value.value.includes('NamedIndividual')){
-                vals.explainability_technique = p.value.value;
+                vals.technique = p.value.value;
               }
             }
 
@@ -169,8 +164,7 @@ function getQueryexplainers() {
 
             // Presentation Format
             if(p.property.value == "https://purl.org/heals/eo#hasPresentation"){
-              vals.presentation_format = selectMultipleVar(presentations_count, vals.presentation_format, p.value.value);  
-              presentations_count++;
+              vals.presentations.push(p.value.value)
             }
 
             // Computational Complexity
@@ -180,37 +174,31 @@ function getQueryexplainers() {
 
             // Applicable AI Methods
             if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasApplicableMethodType"){
-              vals.ai_methods = selectMultipleVar(ai_methods_count, vals.ai_methods, p.value.value);  
-              ai_methods_count++;
+              vals.ai_methods.push(p.value.value)
             }
 
             // Applicable AI Tasks
             if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#applicableProblemType"){
-              vals.ai_tasks = selectMultipleVar(ai_tasks_count, vals.ai_tasks, p.value.value);  
-              ai_tasks_count++;
+              vals.ai_tasks.push(p.value.value)
             }
             // Implementation Framework	
             if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasBackend"){
-              vals.implementation_framework = selectMultipleVar(backend_count, vals.implementation_framework, p.value.value);  
-              backend_count++;
+              vals.implementation.push(p.value.value)
             }
 
             // Metadata
             if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment"){
               var metadata = p.value.value;
               if(metadata.includes('META_DESCRIPTION')){
-                vals.metadata = JSON.parse(metadata.substring(metadata.indexOf('=') + 1));
+                vals.metadata = JSON.stringify(metadata.substring(metadata.indexOf('=') + 1));
               }
             }
   
           })
-          console.log(vals)
-
+          data.push(vals)
         }
 
-
-        // const parsed = parseClasses(response);
-        return list_keyed;
+        return data;
         
       })
       .catch(function (error) {
