@@ -252,16 +252,16 @@ module.exports.getDialogFields = async (req, res) => {
   try {
 
     let output = {
-      KnowledgeLevel: [],
-      UserIntent: [],
-      ExplanationTarget: [],
+      "http://www.w3id.org/iSeeOnto/user#levelOfKnowledge": [],
+      "http://semanticscience.org/resource/SIO_000358": [],
+      "http://www.w3id.org/iSeeOnto/explainer#ExplanationTarget": [],
     }
 
-    output.KnowledgeLevel = await getQueryForInstances('user', 'KnowledgeLevel');
+    output["http://www.w3id.org/iSeeOnto/user#levelOfKnowledge"] = await getQueryForInstances('user', 'KnowledgeLevel');
 
-    output.UserIntent = await getQueryForInstancesOther('http://semanticscience.org/resource/SIO_000358');
+    output["http://semanticscience.org/resource/SIO_000358"] = await getQueryForInstancesOther('http://semanticscience.org/resource/SIO_000358');
 
-    output.ExplanationTarget = await getQueryForInstances('explainer', 'ExplanationTarget');
+    output["http://www.w3id.org/iSeeOnto/explainer#ExplanationTarget"] = await getQueryForInstances('explainer', 'ExplanationTarget');
 
     res.status(200).json(output)
 
