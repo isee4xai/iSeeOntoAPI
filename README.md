@@ -2,6 +2,7 @@
 
 ### Endpoints Available
 
+
 #### `GET` Queries
 
 ```
