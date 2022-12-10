@@ -298,12 +298,24 @@ module.exports.getCockpitUsecases = async (req, res) => {
     output.AI_MODEL_A_METRIC = await getQueryForInstances('aimodelevaluation', 'AIModelAssessmentMetric');
 
     output.KNOWLEDGE_LEVEL = await getQueryForInstances('user', 'KnowledgeLevel');
-    
+
+    // TODO: a temporary fix to sort the ordering - Need to come from ontology
+    const level_sorting = ["No knowledge", "Novice", "Advanced beginner", "Proficient", "Competent", "Expert"]
+    let sorted_arr = []
+
+    level_sorting.forEach(function (s) {
+      output.KNOWLEDGE_LEVEL.forEach(function(original){
+        if(s == original.label) sorted_arr.push(original)
+      })
+    })
+
+    output.KNOWLEDGE_LEVEL = sorted_arr
+
     output.IMPLEMENTATION_FRAMEWORK = await getQueryForInstances('explainer', 'Implementation_Framework');
 
-    output.FEATURE_RANGE = await getQueryForInstances('aimodel','Dataset_Feature_Quantity_Range' );
+    output.FEATURE_RANGE = await getQueryForInstances('aimodel', 'Dataset_Feature_Quantity_Range');
 
-    output.INSTANCE_RANGE = await getQueryForInstances('aimodel','Dataset_Instance_Quantity_Range' );
+    output.INSTANCE_RANGE = await getQueryForInstances('aimodel', 'Dataset_Instance_Quantity_Range');
 
     res.status(200).json(output)
 
