@@ -1,5 +1,6 @@
 const axios = require('axios');
 var qs = require('qs');
+const { v4 } = require('uuid');
 // SC => Top Level Subclasses only
 // SN => Subclass with children nodes
 // IN => Instances of
@@ -81,6 +82,7 @@ function getQueryexplainers() {
         for (let instance in list_keyed) {
           // Per Instance
           var vals = {
+            key: "",
             name: "",
             explainer_description: "",
             technique: "",
@@ -98,6 +100,7 @@ function getQueryexplainers() {
             implementation: [],
             metadata: ""
           }
+          vals.key = v4();
 
           list_keyed[instance].forEach(p => {
             // Per Property
