@@ -1,4 +1,8 @@
 ### iSee Onto API
+<a href="https://doi.org/10.5281/zenodo.7734686"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7734686.svg" alt="DOI"></a>
+
+The iSee Onto API serves as a middleware connecting the iSee Ontology and iSee API. It utilizes Apache Jena Fuseki server and SPARQL to retrieve information from the iSee Ontology.
+
 
 ### Endpoints Available
 
