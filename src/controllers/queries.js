@@ -156,7 +156,8 @@ module.exports.getUserQuestionTarget = async (req, res) => {
 // Get UserDomain - IN // get KnowledgeLevel - IN <http://www.w3id.org/iSeeOnto/user#Domain>
 module.exports.getUserDomain = async (req, res) => {
   try {
-    getQueryForInstances('user', 'Domain').then(function (response) {
+    // getQueryForInstances('user', 'Domain').then(function (response) {
+      getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#Domain').then(function (response) {
       res.status(200).json(response)
     }).catch(function (error) {
       console.log(error);
