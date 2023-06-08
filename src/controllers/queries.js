@@ -249,6 +249,56 @@ module.exports.getExplainerFields = async (req, res) => {
   }
 };
 
+module.exports.getExplainerFieldsFlat = async (req, res) => {
+  try {
+
+    let output = {
+      ExplainabilityTechnique: [],
+      DatasetType: [],
+      Explanation: [],
+      Concurrentness: [],
+      Scope: [],
+      Portability: [],
+      Target: [],
+      InformationContentEntity: [],
+      ComputationalComplexity: [],
+      AIMethod: [],
+      AITask: [],
+      Implementation_Framework: []
+    }
+
+    output.ExplainabilityTechnique = await getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
+
+    output.Explanation = await getQueryForClassesWithChildrenFlat('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
+
+    output.DatasetType = await getQueryForInstancesFlat('explainer', 'DatasetType');
+
+    output.Concurrentness = await getQueryForInstancesFlat('explainer', 'ExplainerConcurrentness');
+
+    output.Scope = await getQueryForInstancesFlat('explainer', 'ExplanationScope');
+
+    output.Portability = await getQueryForInstancesFlat('explainer', 'Portability');
+
+    output.Target = await getQueryForInstancesFlat('explainer', 'ExplanationTarget');
+
+    output.ComputationalComplexity = await getQueryForInstancesFlat('explainer', 'Time_Complexity');
+
+    output.Implementation_Framework = await getQueryForInstancesFlat('explainer', 'Implementation_Framework');
+
+    output.InformationContentEntity = await getQueryForClassesWithChildrenFlat('http://semanticscience.org/resource/SIO_000015');
+
+    output.AIMethod = await getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_METHOD);
+
+    output.AITask = await getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_TASK);
+
+
+    res.status(200).json(output)
+
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
 module.exports.getDialogFields = async (req, res) => {
   try {
 
@@ -386,6 +436,50 @@ function getQueryForInstances(ontology, parent) {
 }
 
 
+function getQueryForInstancesFlat(ontology, parent) {
+
+  try {
+    const query = `
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+    SELECT distinct ?class ?label
+    WHERE {
+        ?class rdf:type <http://www.w3id.org/iSeeOnto/`+ ontology + `#` + parent + `> .
+        ?class rdfs:label ?label .
+    }
+    order by ?class`;
+
+    console.log(query)
+    var data = qs.stringify({
+      'query': query
+    });
+    var config = {
+      method: 'post',
+      url: endpointUrl,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: data
+    };
+
+    return axios(config)
+      .then(function (response) {
+        const parsed = parseClassesFlat(response);
+        return parsed;
+      })
+      .catch(function (error) {
+        console.log("error - inner: ", error)
+
+        return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+      });
+
+  } catch (error) {
+    return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+  }
+
+}
+
 function getQueryForInstancesOther(key) {
 
   try {
@@ -472,11 +566,62 @@ function getQueryForClassesWithChildren(rootKey) {
 
 }
 
+function getQueryForClassesWithChildrenFlat(rootKey) {
+  try {
+    const query = `
+    prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT distinct ?class ?label ?parent
+    WHERE {
+        ?class rdfs:label ?label .
+        ?class rdfs:subClassOf* <`+ rootKey + `>.
+  		?class rdfs:subClassOf ?parent
+    }
+    order by ?class`;
+    console.log(query)
+
+
+    var data = qs.stringify({
+      'query': query
+    });
+    var config = {
+      method: 'post',
+      url: endpointUrl,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: data
+    };
+
+    return axios(config)
+      .then(function (response) {
+        const parsed = parseWithChildrenFlat(response, rootKey);
+        return parsed;
+      })
+      .catch(function (error) {
+        console.log("error - inner: ", error)
+        return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+      });
+
+  } catch (error) {
+    return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+  }
+
+}
+
 function parseClasses(data) {
   var parse = [];
   const results = data.data.results.bindings;
   results.forEach(c => {
     parse.push({ "key": c.class.value, "label": c.label.value })
+  });
+  return parse;
+}
+
+function parseClassesFlat(data) {
+  var parse = {};
+  const results = data.data.results.bindings;
+  results.forEach(c => {
+    parse[c.class.value] = c.label.value
   });
   return parse;
 }
@@ -506,6 +651,16 @@ function parseWithChildren(data, rootKey) {
   })
 
   return nodes[rootKey]
+}
+
+function parseWithChildrenFlat(data, rootKey) {
+  var parse = {};
+  const results = data.data.results.bindings;
+  results.forEach(c => {
+    parse[c.class.value] = c.label.value
+  });
+
+  return parse
 }
 
 // Required for subclasses based methods
