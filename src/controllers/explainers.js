@@ -98,7 +98,9 @@ function getQueryexplainers() {
             ai_methods: [],
             ai_tasks: [],
             implementation: [],
-            metadata: ""
+            metadata: "",
+            model_access: "",
+            needs_training_data: false
           }
           vals.key = v4();
 
