@@ -417,7 +417,7 @@ module.exports.insertExplainer = async (req, res) => {
 									   exp:hasPortability ?portability ; 
 									   exp:targetType ?target_type ; 
 									   exp:hasOutputType  ?explanation_type_class ; 
-									   ` + presentations_insert + implementation_insert + ai_method_insert + ai_task_insert + `
+									   ` + presentations_insert + ai_method_insert + ai_task_insert + `
 									   exp:hasComplexity ?complexity .
 								
 								
@@ -427,7 +427,10 @@ module.exports.insertExplainer = async (req, res) => {
 							   rdfs:comment ?comment_explanation_description ;
 							 rdf:type exp:Explainer ; 
 							 rdf:type owl:NamedIndividual ;
-							 exp:utilises ?technique .														 										
+							 exp:utilises ?technique ;
+               ` + implementation_insert + `
+               exp:has_model_access ?model_access ;
+               exp:needs_training_data ?training_data .														 										
 				} WHERE {
 					VALUES ?isee { "http://www.semanticweb.org/isee/iseeonto/2022/9/30#" } .
 					VALUES ?exp_iri { "http://www.w3id.org/iSeeOnto/explainer#" } . 
@@ -444,6 +447,8 @@ module.exports.insertExplainer = async (req, res) => {
 					VALUES ?scope_text { "`+ data.scope + `" } .
 					VALUES ?port_text { "`+ data.portability + `" } .
 					VALUES ?target_text { "`+ data.target + `" } .
+          VALUES ?model_access_text { "`+ data.modelAccess + `" } . 
+          VALUES ?training_data_text { "`+ data.needsTrainingData + `" } . 
 					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
 					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') + `" } . ` + presentations + `VALUES ?complexity_text { "` + data.complexity + `" } . 
 					` + implementation + `VALUES ?explanation_type_class_text { "` + data.explanation_type[data.explanation_type.length - 1] + `" } . 
@@ -459,6 +464,8 @@ module.exports.insertExplainer = async (req, res) => {
 					BIND( IRI(?complexity_text) as ?complexity) .
 					BIND( IRI(?aimethod_text) as ?aimethod) .
 					BIND( IRI(?aitask_text) as ?aitask) .
+          BIND( IRI(?model_access_text) as ?model_access) .
+          BIND( IRI(?training_data_text) as ?training_data) .
 					BIND( IRI(?explanation_type_class_text) as ?explanation_type_class) . 
 					` + presentations_bind + implementation_bind + ai_method_bind + ai_task_bind + `					
 				}	
@@ -494,7 +501,3 @@ module.exports.insertExplainer = async (req, res) => {
   }
 
 }
-
-
-
-
