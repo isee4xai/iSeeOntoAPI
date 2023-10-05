@@ -238,9 +238,9 @@ module.exports.getExplainerFields = async (req, res) => {
 
     output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
 
-    output.ModelAccess = await getQueryForInstances('explainer', 'ModelAccess');
+    output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
 
-    output.NeedsTraining_Data = await getQueryForInstances('explainer', 'NeedsTrainingData');
+    output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
 
     output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
 
