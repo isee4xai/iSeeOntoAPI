@@ -193,7 +193,7 @@ function getQueryexplainers() {
 
             // Needs Training Data
             if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needsTrainingData"){
-              vals.needs_training_data.push(p.value.value)
+              vals.needs_training_data = p.value.value;
             }
 
             // Model Access
