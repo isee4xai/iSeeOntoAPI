@@ -14,11 +14,9 @@ const PROP_WEIGHTS = {
 const WEIGHTS_TOTAL = 10.2999;
 
 /*
-only tested depth
+only tested for depth
 */
-function rebuildSimilarity(explainer_list, ontology) {
-    // const explainer_list = JSON.parse(fs.readFileSync('./test_data/explainers_list.json'));
-    const explainer_list_expanded = expandByOntology(explainer_list, ontology);
+function rebuildSimilarity(explainer_list_expanded) {
     const matrix = {};
     for (const i in explainer_list_expanded) {
         const row = {};
@@ -34,7 +32,6 @@ function rebuildSimilarity(explainer_list, ontology) {
 }
 
 function expandByOntology(e_list, ontology) {
-    // const ontology = JSON.parse(fs.readFileSync('./test_data/ontology.json'));
     const technique_parents = populateParents(ontology["ExplainabilityTechnique"]["children"]);
     const explanation_type_parents = populateParents(ontology["Explanation"]["children"]);
     const presentation_parents = populateParents(ontology["InformationContentEntity"]["children"]);
@@ -258,5 +255,5 @@ function ontologyWeightDetail(v1, v2) {
 }
 
 module.exports = {
-    rebuildSimilarity,
+    rebuildSimilarity, expandByOntology
 };

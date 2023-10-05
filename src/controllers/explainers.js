@@ -7,8 +7,6 @@ const { v4 } = require('uuid');
 require('dotenv').config();
 const util = require("./util");
 const queries = require("./queries");
-const fs = require('fs');
-const path = require('path');
 
 const BASE_URL_EXPLAINERS = process.env.SPAQRL_ENDPOINT_EXPLAINERS;
 
@@ -483,11 +481,6 @@ module.exports.insertExplainer = async (req, res) => {
 
       try {
         const response = axios(config);
-        const explainer_list = getQueryexplainers();
-        const ontology = queries.getExplainerFieldsFlat();
-        const simMatrix = util.rebuildSimilarity(explainer_list, ontology);
-        const filePath = path.join(__dirname, 'data', 'matrix.json');
-        fs.writeFileSync(filePath, JSON.stringify(simMatrix));
         res.status(200).json({ response: response.data });
       }
       catch (error) {
@@ -503,9 +496,15 @@ module.exports.insertExplainer = async (req, res) => {
 
 module.exports.similarities = async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'data', 'matrix.json');
-    const content = JSON.parse(fs.readFileSync(filePath));
-    res.status(200).json(content);
+    const explainer_list = getQueryexplainers();
+    const ontology = queries.getExplainerFields();
+    const explainers_extended = util.expandByOntology(explainer_list, ontology);
+    const sim_matrix  = util.rebuildSimilarity(explainers_extended);
+    res.status(200).json(
+      {
+        "explainers_extended": explainers_extended,
+        "similarities": sim_matrix
+      });
   } catch (error) {
     res.status(500).json({ message: error });
   }
