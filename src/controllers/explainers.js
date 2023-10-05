@@ -191,6 +191,16 @@ function getQueryexplainers() {
               vals.implementation.push(p.value.value)
             }
 
+            // Needs Training Data
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needsTrainingData"){
+              vals.needs_training_data.push(p.value.value)
+            }
+
+            // Model Access
+            if(p.property.value == "http://www.w3id.org/iSeeOnto/explainer#modelAccessType"){
+              vals.model_access = p.value.value;
+            }
+
             // Metadata
             if(p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment"){
               var metadata = p.value.value;
