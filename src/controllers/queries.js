@@ -210,8 +210,8 @@ module.exports.getExplainerFieldsFiltered = async (filter = {}) => {
     AIMethod: [],
     AITask: [],
     Implementation_Framework: [],
-      ModelAccess: [],
-      NeedsTrainingData: []
+    ModelAccess: [],
+    NeedsTrainingData: []
   }
 
   output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter? filter.ExplainabilityTechnique : []);
@@ -234,9 +234,9 @@ module.exports.getExplainerFieldsFiltered = async (filter = {}) => {
 
   output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework', filter? filter.Implementation_Framework : []);
 
-    output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
+  output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
 
-    output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
+  output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
 
   output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015', filter? filter.InformationContentEntity : []);
 
@@ -811,55 +811,3 @@ module.exports.anyQueryAdmin = async (req, res) => {
 
 
 }
-
-module.exports.getFilteredExplainerFields = async (req, res) => {
-  try {
-    let output = {
-      ExplainabilityTechnique: [],
-      DatasetType: [],
-      Explanation: [],
-      Concurrentness: [],
-      Scope: [],
-      Portability: [],
-      Target: [],
-      InformationContentEntity: [],
-      ComputationalComplexity: [],
-      AIMethod: [],
-      AITask: [],
-      Implementation_Framework: []
-    }
-
-    
-
-    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
-    output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-
-    output.DatasetType = await getQueryForInstances('explainer', 'DatasetType');
-
-    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
-    output.Concurrentness = await getQueryForInstances('explainer', 'ExplainerConcurrentness');
-
-    output.Scope = await getQueryForInstances('explainer', 'ExplanationScope');
-
-    output.Portability = await getQueryForInstances('explainer', 'Portability');
-
-    output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
-
-    output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
-
-    output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
-
-    output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-
-    output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-
-    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
-
-    res.status(200).json(output)
-
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-};
