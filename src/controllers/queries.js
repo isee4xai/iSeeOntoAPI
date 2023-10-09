@@ -481,7 +481,7 @@ function getQueryForInstances(ontology, parent) {
 
     return axios(config)
       .then(function (response) {
-        const parsed = parseClasses(response, filter);
+        const parsed = parseClasses(response);
         return parsed;
       })
       .catch(function (error) {
