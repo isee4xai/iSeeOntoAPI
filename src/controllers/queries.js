@@ -247,7 +247,8 @@ module.exports.getExplainerFieldsFiltered = async (filter) => {
   return output
 };
 
-module.exports.getExplainerFieldsInternal = async () => {
+// getExplainerFields 
+module.exports.getExplainerFields = async (req, res) => {
   try {
     let output = {
       ExplainabilityTechnique: [],
@@ -294,20 +295,8 @@ module.exports.getExplainerFieldsInternal = async () => {
 
     output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
 
-    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
+    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);  
 
-    return output;
-  }
-  catch (error) {
-    console.log("error - inner: ", error)
-    return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
-  }
-}
-
-// getExplainerFields 
-module.exports.getExplainerFields = async (req, res) => {
-  try {
-    const output = await getExplainerFieldsInternal();
     res.status(200).json(output)
   } catch (error) {
     res.status(500).json({ message: error });
