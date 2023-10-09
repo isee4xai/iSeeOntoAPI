@@ -209,7 +209,9 @@ module.exports.getExplainerFieldsFiltered = async (filter = {}) => {
     ComputationalComplexity: [],
     AIMethod: [],
     AITask: [],
-    Implementation_Framework: []
+    Implementation_Framework: [],
+      ModelAccess: [],
+      NeedsTrainingData: []
   }
 
   output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter? filter.ExplainabilityTechnique : []);
@@ -231,6 +233,10 @@ module.exports.getExplainerFieldsFiltered = async (filter = {}) => {
   output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity', filter? filter.ComputationalComplexity : []);
 
   output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework', filter? filter.Implementation_Framework : []);
+
+    output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
+
+    output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
 
   output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015', filter? filter.InformationContentEntity : []);
 
@@ -269,7 +275,9 @@ module.exports.getExplainerFieldsFlat = async (req, res) => {
       ComputationalComplexity: [],
       AIMethod: [],
       AITask: [],
-      Implementation_Framework: []
+      Implementation_Framework: [],
+      ModelAccess: [],
+      NeedsTrainingData: []
     }
 
     output.ExplainabilityTechnique = await getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
@@ -289,6 +297,10 @@ module.exports.getExplainerFieldsFlat = async (req, res) => {
     output.ComputationalComplexity = await getQueryForInstancesFlat('explainer', 'Time_Complexity');
 
     output.Implementation_Framework = await getQueryForInstancesFlat('explainer', 'Implementation_Framework');
+
+    output.ModelAccess = await getQueryForInstancesFlat('explainer', 'ModelAccess');
+
+    output.NeedsTraining_Data = await getQueryForInstancesFlat('explainer', 'NeedsTrainingData');
 
     output.InformationContentEntity = await getQueryForClassesWithChildrenFlat('http://semanticscience.org/resource/SIO_000015');
 
