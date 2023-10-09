@@ -5,9 +5,9 @@ const explainers = require("./explainers");
 
 module.exports.reuseSupport = async (req, res) => {
     try {
-        const explainer_props = explainers.list();
-        const ontology = queries.getExplainerFields();
-        const ontology_flat = queries.getExplainerFieldsFlat();
+        const explainer_props = await explainers.list();
+        const ontology = await queries.getExplainerFields();
+        const ontology_flat = await queries.getExplainerFieldsFlat();
         const explainer_props_extended = util.expandByOntology(explainer_props, ontology);
         const sim_matrix = util.rebuildSimilarity(explainer_props_extended);
         res.status(200).json(
@@ -24,8 +24,8 @@ module.exports.reuseSupport = async (req, res) => {
 
 module.exports.explainersExtended = async (req, res) => {
     try {
-        const explainer_props = explainers.list();
-        const ontology = queries.getExplainerFields();
+        const explainer_props = await explainers.list();
+        const ontology = await queries.getExplainerFields();
         const result = util.expandByOntology(explainer_props, ontology);
         res.status(200).json(result);
     } catch (error) {
@@ -36,11 +36,11 @@ module.exports.explainersExtended = async (req, res) => {
 
 module.exports.explainerFieldsFiltered = async (req, res) => {
     try {
-        const explainer_props = explainers.list();
-        const ontology = queries.getExplainerFields();
+        const explainer_props = await explainers.list();
+        const ontology = await queries.getExplainerFields();
         const explainer_props_extended = util.expandByOntology(explainer_props, ontology);
         const keep = extractProps(explainer_props_extended);
-        const result = queries.getExplainerFieldsFiltered(keep);
+        const result = await queries.getExplainerFieldsFiltered(keep);
         res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: error });
