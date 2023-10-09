@@ -33,7 +33,7 @@ module.exports.list = async (req, res) => {
 //   return variable_name;
 // }
 
-function getQueryexplainers() {
+module.exports.getQueryexplainers = async () => {
 
   try {
     const query = `
@@ -226,7 +226,7 @@ function getQueryexplainers() {
     return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
   }
 
-}
+};
 
 function parseClasses(data) {
   var parse = [];

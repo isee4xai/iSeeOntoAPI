@@ -157,7 +157,7 @@ module.exports.getUserQuestionTarget = async (req, res) => {
 module.exports.getUserDomain = async (req, res) => {
   try {
     // getQueryForInstances('user', 'Domain').then(function (response) {
-      getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#Domain').then(function (response) {
+    getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#Domain').then(function (response) {
       res.status(200).json(response)
     }).catch(function (error) {
       console.log(error);
@@ -247,8 +247,7 @@ module.exports.getExplainerFieldsFiltered = async (filter) => {
   return output
 };
 
-// getExplainerFields 
-module.exports.getExplainerFields = async (req, res) => {
+module.exports.getExplainerFieldsInternal = async () => {
   try {
     let output = {
       ExplainabilityTechnique: [],
@@ -266,39 +265,50 @@ module.exports.getExplainerFields = async (req, res) => {
       ModelAccess: [],
       NeedsTrainingData: []
     }
-  
+
     output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-  
+
     output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-  
+
     output.DatasetType = await getQueryForInstances('explainer', 'DatasetType');
-  
-    // output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters? filters.ExplainabilityTechnique : []);
-  
+
+    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters? filters.ExplainabilityTechnique : []);
+
     output.Concurrentness = await getQueryForInstances('explainer', 'ExplainerConcurrentness');
-  
+
     output.Scope = await getQueryForInstances('explainer', 'ExplanationScope');
-  
+
     output.Portability = await getQueryForInstances('explainer', 'Portability');
-  
+
     output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
-  
+
     output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
-  
+
     output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
-  
+
     output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
-  
+
     output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
-  
+
     output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-  
+
     output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-  
-    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);  
 
+    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
+
+    return output;
+  }
+  catch (error) {
+    console.log("error - inner: ", error)
+    return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+  }
+}
+
+// getExplainerFields 
+module.exports.getExplainerFields = async (req, res) => {
+  try {
+    const output = await getExplainerFieldsInternal();
     res.status(200).json(output)
-
   } catch (error) {
     res.status(500).json({ message: error });
   }
@@ -416,8 +426,8 @@ module.exports.getCockpitUsecases = async (req, res) => {
     let sorted_arr = []
 
     level_sorting.forEach(function (s) {
-      output.KNOWLEDGE_LEVEL.forEach(function(original){
-        if(s == original.label) sorted_arr.push(original)
+      output.KNOWLEDGE_LEVEL.forEach(function (original) {
+        if (s == original.label) sorted_arr.push(original)
       })
     })
 
@@ -761,7 +771,7 @@ function parseClasses(data) {
   results.forEach(c => {
     parse.push({ "key": c.class.value, "label": c.label.value })
   });
-  
+
   return parse;
 }
 
@@ -776,7 +786,7 @@ function parseFilterClasses(data, filter) {
   if (filter.length > 0) {
     parse = parse.filter(obj => filter.includes(obj.key));
   }
-  
+
   return parse;
 }
 
