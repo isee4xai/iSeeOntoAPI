@@ -157,7 +157,7 @@ module.exports.getUserQuestionTarget = async (req, res) => {
 module.exports.getUserDomain = async (req, res) => {
   try {
     // getQueryForInstances('user', 'Domain').then(function (response) {
-    getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#Domain').then(function (response) {
+      getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#Domain').then(function (response) {
       res.status(200).json(response)
     }).catch(function (error) {
       console.log(error);
@@ -266,38 +266,39 @@ module.exports.getExplainerFields = async (req, res) => {
       ModelAccess: [],
       NeedsTrainingData: []
     }
-
+  
     output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
+  
     output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-
+  
     output.DatasetType = await getQueryForInstances('explainer', 'DatasetType');
-
-    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters? filters.ExplainabilityTechnique : []);
-
+  
+    // output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
+  
     output.Concurrentness = await getQueryForInstances('explainer', 'ExplainerConcurrentness');
-
+  
     output.Scope = await getQueryForInstances('explainer', 'ExplanationScope');
-
+  
     output.Portability = await getQueryForInstances('explainer', 'Portability');
-
+  
     output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
-
+  
     output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
-
+  
     output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
-
+  
     output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
-
+  
     output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
-
+  
     output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-
+  
     output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-
+  
     output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);  
 
     res.status(200).json(output)
+
   } catch (error) {
     res.status(500).json({ message: error });
   }
