@@ -32,21 +32,22 @@ function rebuildSimilarity(explainer_list_expanded) {
 }
 
 function expandByOntology(e_list, ontology) {
+    expanded_list = JSON.parse(JSON.stringify(e_list));
     const technique_parents = populateParents(ontology["ExplainabilityTechnique"]["children"]);
     const explanation_type_parents = populateParents(ontology["Explanation"]["children"]);
     const presentation_parents = populateParents(ontology["InformationContentEntity"]["children"]);
     const ai_method_parents = populateParents(ontology["AIMethod"]["children"]);
     const ai_task_parents = populateParents(ontology["AITask"]["children"]);
 
-    for (const i in e_list) {
-        e = e_list[i];
+    for (const i in expanded_list) {
+        e = expanded_list[i];
         e["technique"] = technique_parents[e["technique"]];
         e["explanation_type"] = explanation_type_parents[e["explanation_type"]];
         e["presentations"] = e["presentations"].map((x) => presentation_parents[x]);
         e["ai_methods"] = e["ai_methods"].map((x) => ai_method_parents[x]);
         e["ai_tasks"] = e["ai_tasks"].map((x) => ai_task_parents[x]);
     }
-    return e_list;
+    return expanded_list;
 }
 
 function populateParents(dataArray, parentList = []) {

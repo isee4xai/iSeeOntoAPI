@@ -5,8 +5,6 @@ const { v4 } = require('uuid');
 // SN => Subclass with children nodes
 // IN => Instances of
 require('dotenv').config();
-const util = require("./util");
-const queries = require("./queries");
 
 const BASE_URL_EXPLAINERS = process.env.SPAQRL_ENDPOINT_EXPLAINERS;
 
@@ -493,19 +491,3 @@ module.exports.insertExplainer = async (req, res) => {
   }
 
 }
-
-module.exports.similarities = async (req, res) => {
-  try {
-    const explainer_list = getQueryexplainers();
-    const ontology = queries.getExplainerFields();
-    const explainers_extended = util.expandByOntology(explainer_list, ontology);
-    const sim_matrix  = util.rebuildSimilarity(explainers_extended);
-    res.status(200).json(
-      {
-        "explainers_extended": explainers_extended,
-        "similarities": sim_matrix
-      });
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-};

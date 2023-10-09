@@ -196,51 +196,56 @@ module.exports.getKnowledgeLevel = async (req, res) => {
   }
 };
 
+module.exports.getExplainerFieldsFiltered = async (filter = {}) => {
+  let output = {
+    ExplainabilityTechnique: [],
+    DatasetType: [],
+    Explanation: [],
+    Concurrentness: [],
+    Scope: [],
+    Portability: [],
+    Target: [],
+    InformationContentEntity: [],
+    ComputationalComplexity: [],
+    AIMethod: [],
+    AITask: [],
+    Implementation_Framework: []
+  }
+
+  output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter? filter.ExplainabilityTechnique : []);
+
+  output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation', filter? filter.Explanation : []);
+
+  output.DatasetType = await getQueryForInstances('explainer', 'DatasetType', filter? filter.DatasetType : []);
+
+  // output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters? filters.ExplainabilityTechnique : []);
+
+  output.Concurrentness = await getQueryForInstances('explainer', 'ExplainerConcurrentness', filter? filter.Concurrentness : []);
+
+  output.Scope = await getQueryForInstances('explainer', 'ExplanationScope', filter? filter.Scope : []);
+
+  output.Portability = await getQueryForInstances('explainer', 'Portability', filter? filter.Portability : []);
+
+  output.Target = await getQueryForInstances('explainer', 'ExplanationTarget', filter? filter.Target : []);
+
+  output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity', filter? filter.ComputationalComplexity : []);
+
+  output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework', filter? filter.Implementation_Framework : []);
+
+  output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015', filter? filter.InformationContentEntity : []);
+
+  output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD, filter? filter.AIMethod : []);
+
+  output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK, filter? filter.AITask : []);
+
+  return output
+};
 
 // getExplainerFields 
 module.exports.getExplainerFields = async (req, res) => {
   try {
 
-    let output = {
-      ExplainabilityTechnique: [],
-      DatasetType: [],
-      Explanation: [],
-      Concurrentness: [],
-      Scope: [],
-      Portability: [],
-      Target: [],
-      InformationContentEntity: [],
-      ComputationalComplexity: [],
-      AIMethod: [],
-      AITask: [],
-      Implementation_Framework: []
-    }
-
-    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
-    output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-
-    output.DatasetType = await getQueryForInstances('explainer', 'DatasetType');
-
-    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
-    output.Concurrentness = await getQueryForInstances('explainer', 'ExplainerConcurrentness');
-
-    output.Scope = await getQueryForInstances('explainer', 'ExplanationScope');
-
-    output.Portability = await getQueryForInstances('explainer', 'Portability');
-
-    output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
-
-    output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
-
-    output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
-
-    output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-
-    output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-
-    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
+    const output = await getExplainerFieldsFiltered();
 
     res.status(200).json(output)
 
@@ -391,7 +396,7 @@ module.exports.getCockpitExplainers = async (req, res) => {
 
 
 // HELPER FUNCTIONS
-function getQueryForInstances(ontology, parent) {
+function getQueryForInstances(ontology, parent, filter) {
 
   try {
     const query = `
@@ -420,7 +425,7 @@ function getQueryForInstances(ontology, parent) {
 
     return axios(config)
       .then(function (response) {
-        const parsed = parseClasses(response);
+        const parsed = parseClasses(response, filter);
         return parsed;
       })
       .catch(function (error) {
@@ -524,7 +529,7 @@ function getQueryForInstancesOther(key) {
 }
 
 
-function getQueryForClassesWithChildren(rootKey) {
+function getQueryForClassesWithChildren(rootKey, filter) {
   try {
     const query = `
     prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -552,7 +557,7 @@ function getQueryForClassesWithChildren(rootKey) {
 
     return axios(config)
       .then(function (response) {
-        const parsed = parseWithChildren(response, rootKey);
+        const parsed = parseWithChildren(response, rootKey, filter);
         return parsed;
       })
       .catch(function (error) {
@@ -608,12 +613,18 @@ function getQueryForClassesWithChildrenFlat(rootKey) {
 
 }
 
-function parseClasses(data) {
+function parseClasses(data, filter) {
   var parse = [];
   const results = data.data.results.bindings;
   results.forEach(c => {
     parse.push({ "key": c.class.value, "label": c.label.value })
   });
+
+  // Filter the parse array
+  if (filter) {
+    parse = parse.filter(obj => filter.includes(obj.key));
+  }
+  
   return parse;
 }
 
@@ -626,12 +637,17 @@ function parseClassesFlat(data) {
   return parse;
 }
 
-function parseWithChildren(data, rootKey) {
+function parseWithChildren(data, rootKey, filter) {
   var parse = [];
   const results = data.data.results.bindings;
   results.forEach(c => {
     parse.push({ "key": c.class.value, "label": c.label.value, "parent": c.parent.value })
   });
+
+  // Filter the parse array
+  if (filter) {
+    parse = parse.filter(obj => filter.includes(obj.key));
+  }
 
   var nodes = {}
   var root = new Node(rootKey, rootKey, rootKey)
@@ -784,7 +800,54 @@ module.exports.anyQueryAdmin = async (req, res) => {
 
 }
 
+module.exports.getFilteredExplainerFields = async (req, res) => {
+  try {
+    let output = {
+      ExplainabilityTechnique: [],
+      DatasetType: [],
+      Explanation: [],
+      Concurrentness: [],
+      Scope: [],
+      Portability: [],
+      Target: [],
+      InformationContentEntity: [],
+      ComputationalComplexity: [],
+      AIMethod: [],
+      AITask: [],
+      Implementation_Framework: []
+    }
 
+    
 
+    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
 
+    output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
 
+    output.DatasetType = await getQueryForInstances('explainer', 'DatasetType');
+
+    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
+
+    output.Concurrentness = await getQueryForInstances('explainer', 'ExplainerConcurrentness');
+
+    output.Scope = await getQueryForInstances('explainer', 'ExplanationScope');
+
+    output.Portability = await getQueryForInstances('explainer', 'Portability');
+
+    output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
+
+    output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
+
+    output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
+
+    output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
+
+    output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
+
+    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
+
+    res.status(200).json(output)
+
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
