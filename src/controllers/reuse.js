@@ -22,6 +22,18 @@ module.exports.reuseSupport = async (req, res) => {
     }
 };
 
+module.exports.explainersExtended = async (req, res) => {
+    try {
+        const explainer_props = explainers.list();
+        const ontology = queries.getExplainerFields();
+        const result = util.expandByOntology(explainer_props, ontology);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
+};
+
+
 module.exports.explainerFieldsFiltered = async (req, res) => {
     try {
         const explainer_props = explainers.list();
