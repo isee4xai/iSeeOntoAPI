@@ -633,7 +633,7 @@ function parseClasses(data, filter) {
   });
 
   // Filter the parse array
-  if (filter) {
+  if (filter.length > 0) {
     parse = parse.filter(obj => filter.includes(obj.key));
   }
   
@@ -657,7 +657,7 @@ function parseWithChildren(data, rootKey, filter) {
   });
 
   // Filter the parse array
-  if (filter) {
+  if (filter.length > 0) {
     parse = parse.filter(obj => filter.includes(obj.key));
   }
 
