@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const BASE_URL = process.env.SPAQRL_ENDPOINT;
 const endpointUrl = BASE_URL + 'sparql'
-
+const SHARED_KEYS = { AI_TASK: 'https://purl.org/heals/eo#AITask', AI_METHOD: 'https://purl.org/heals/eo#ArtificialIntelligenceMethod' }
 module.exports = class UtilService {
     static MEASURES = ['common_attributes', 'weighted_ca', 'cosine', 'depth', 'detail'];
 
@@ -285,35 +285,35 @@ module.exports = class UtilService {
             NeedsTrainingData: []
         }
         output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-        console.log(output);
+        
         output.Explanation = await UtilService.getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-        console.log(output);
+        
         output.DatasetType = await UtilService.getQueryForInstances('explainer', 'DatasetType');
-        console.log(output);
+        
         output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-        console.log(output);
+        
         output.Concurrentness = await UtilService.getQueryForInstances('explainer', 'ExplainerConcurrentness');
-        console.log(output);
+        
         output.Scope = await UtilService.getQueryForInstances('explainer', 'ExplanationScope');
-        console.log(output);
+        
         output.Portability = await UtilService.getQueryForInstances('explainer', 'Portability');
-        console.log(output);
+        
         output.Target = await UtilService.getQueryForInstances('explainer', 'ExplanationTarget');
-        console.log(output);
+        
         output.ComputationalComplexity = await UtilService.getQueryForInstances('explainer', 'Time_Complexity');
-        console.log(output);
+        
         output.Implementation_Framework = await UtilService.getQueryForInstances('explainer', 'Implementation_Framework');
-        console.log(output);
+        
         output.ModelAccess = await UtilService.getQueryForInstances('explainer', 'Model_Access_Type');
-        console.log(output);
+        
         output.NeedsTrainingData = await UtilService.getQueryForInstances('explainer', 'needs_training_data');
-        console.log(output);
+        
         output.InformationContentEntity = await UtilService.getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-        console.log(output);
+        
         output.AIMethod = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-        console.log(output);
+        
         output.AITask = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
-        console.log(output);
+        
         return output
     }
 

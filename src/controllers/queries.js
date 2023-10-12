@@ -201,8 +201,8 @@ module.exports.getKnowledgeLevel = async (req, res) => {
 // getExplainerFields 
 module.exports.getExplainerFields = async (req, res) => {
   try {
-    console.log("getExplainerFields");
     const result = await UtilService.explainerFields();
+    console.log("result", result);
     res.status(200).json(result)
 
   } catch (error) {
