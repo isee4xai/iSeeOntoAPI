@@ -3,8 +3,7 @@ const UtilService = require("../services/util");
 
 module.exports.reuseSupport = async (req, res) => {
     try {
-        const result = UtilService.reuseSupport();
-        console.log("controller", result);
+        const result = await UtilService.reuseSupport();
         return result;
     } catch (error) {
         res.status(500).json({ message: error });
