@@ -1008,7 +1008,9 @@ module.exports = class UtilService {
             ComputationalComplexity: [],
             AIMethod: [],
             AITask: [],
-            Implementation_Framework: []
+            Implementation_Framework: [],
+            ModelAccess: [],
+            NeedsTrainingData: []
         };
         for (const i in e_props_extended) {
             const e_extended = e_props_extended[i];
