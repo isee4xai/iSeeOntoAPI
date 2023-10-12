@@ -521,7 +521,7 @@ module.exports = class UtilService {
 
             return axios(config)
                 .then(function (response) {
-                    const parsed = parseClassesFlat(response);
+                    const parsed = UtilService.parseClassesFlat(response);
                     return parsed;
                 })
                 .catch(function (error) {
