@@ -345,7 +345,7 @@ module.exports = class UtilService {
 
         output.DatasetType = await UtilService.getQueryFilterForInstances('explainer', 'DatasetType', filter.DatasetType);
 
-        output.ExplainabilityTechnique = await UtilService.getQueryForClassesFilterWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters.ExplainabilityTechnique);
+        output.ExplainabilityTechnique = await UtilService.getQueryForClassesFilterWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter.ExplainabilityTechnique);
 
         output.Concurrentness = await UtilService.getQueryFilterForInstances('explainer', 'ExplainerConcurrentness', filter.Concurrentness);
 
