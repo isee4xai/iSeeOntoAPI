@@ -6,8 +6,11 @@ const Node = require("./node");
 
 require('dotenv').config();
 
-const BASE_URL = process.env.SPAQRL_ENDPOINT;
-const endpointUrl = BASE_URL + 'sparql'
+const BASE_ONTO_URL = process.env.SPAQRL_ENDPOINT;
+const ontoURL = BASE_ONTO_URL + 'sparql'
+const BASE_EXPLAINERS_URL = process.env.SPAQRL_ENDPOINT_EXPLAINERS;
+const explainersURL = BASE_EXPLAINERS_URL + 'sparql'
+
 const SHARED_KEYS = { AI_TASK: 'https://purl.org/heals/eo#AITask', AI_METHOD: 'https://purl.org/heals/eo#ArtificialIntelligenceMethod' }
 module.exports = class UtilService {
     static MEASURES = ['common_attributes', 'weighted_ca', 'cosine', 'depth', 'detail'];
@@ -438,7 +441,7 @@ module.exports = class UtilService {
             });
             var config = {
                 method: 'post',
-                url: endpointUrl,
+                url: explainersURL,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -489,7 +492,7 @@ module.exports = class UtilService {
             });
             var config = {
                 method: 'post',
-                url: endpointUrl,
+                url: ontoURL,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -558,7 +561,7 @@ module.exports = class UtilService {
             });
             var config = {
                 method: 'post',
-                url: endpointUrl,
+                url: ontoURL,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -614,7 +617,7 @@ module.exports = class UtilService {
             });
             var config = {
                 method: 'post',
-                url: endpointUrl,
+                url: ontoURL,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -688,7 +691,7 @@ module.exports = class UtilService {
             });
             var config = {
                 method: 'post',
-                url: endpointUrl,
+                url: ontoURL,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -729,7 +732,7 @@ module.exports = class UtilService {
             });
             var config = {
                 method: 'post',
-                url: endpointUrl,
+                url: ontoURL,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -796,7 +799,7 @@ module.exports = class UtilService {
             });
             var config = {
                 method: 'post',
-                url: endpointUrl,
+                url: explainersURL,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
