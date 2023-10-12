@@ -326,35 +326,35 @@ module.exports = class UtilService {
             ModelAccess: [],
             NeedsTrainingData: []
         }
-        output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter.ExplainabilityTechnique);
+        output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
 
-        output.Explanation = await UtilService.getQueryForClassesWithChildrenFlat('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation', filter.Explanation);
+        output.Explanation = await UtilService.getQueryForClassesWithChildrenFlat('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
 
-        output.DatasetType = await UtilService.getQueryForInstancesFlat('explainer', 'DatasetType', filter.DatasetType);
+        output.DatasetType = await UtilService.getQueryForInstancesFlat('explainer', 'DatasetType');
 
-        output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters.ExplainabilityTechnique);
+        output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
 
-        output.Concurrentness = await UtilService.getQueryForInstancesFlat('explainer', 'ExplainerConcurrentness', filter.Concurrentness);
+        output.Concurrentness = await UtilService.getQueryForInstancesFlat('explainer', 'ExplainerConcurrentness');
 
-        output.Scope = await UtilService.getQueryForInstancesFlat('explainer', 'ExplanationScope', filter.Scope);
+        output.Scope = await UtilService.getQueryForInstancesFlat('explainer', 'ExplanationScope');
 
-        output.Portability = await UtilService.getQueryForInstancesFlat('explainer', 'Portability', filter.Portability);
+        output.Portability = await UtilService.getQueryForInstancesFlat('explainer', 'Portability');
 
-        output.Target = await UtilService.getQueryForInstancesFlat('explainer', 'ExplanationTarget', filter.Target);
+        output.Target = await UtilService.getQueryForInstancesFlat('explainer', 'ExplanationTarget');
 
-        output.ComputationalComplexity = await UtilService.getQueryForInstancesFlat('explainer', 'Time_Complexity', filter.ComputationalComplexity);
+        output.ComputationalComplexity = await UtilService.getQueryForInstancesFlat('explainer', 'Time_Complexity');
 
-        output.Implementation_Framework = await UtilService.getQueryForInstancesFlat('explainer', 'Implementation_Framework', filter.Implementation_Framework);
+        output.Implementation_Framework = await UtilService.getQueryForInstancesFlat('explainer', 'Implementation_Framework');
 
         output.ModelAccess = await UtilService.getQueryForInstancesFlat('explainer', 'Model_Access_Type');
 
         output.NeedsTrainingData = await UtilService.getQueryForInstancesFlat('explainer', 'needs_training_data');
 
-        output.InformationContentEntity = await UtilService.getQueryForClassesWithChildrenFlat('http://semanticscience.org/resource/SIO_000015', filter.InformationContentEntity);
+        output.InformationContentEntity = await UtilService.getQueryForClassesWithChildrenFlat('http://semanticscience.org/resource/SIO_000015');
 
-        output.AIMethod = await UtilService.getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_METHOD, filter.AIMethod);
+        output.AIMethod = await UtilService.getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_METHOD);
 
-        output.AITask = await UtilService.getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_TASK, filter.AITask);
+        output.AITask = await UtilService.getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_TASK);
 
         return output
     }
