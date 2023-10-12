@@ -985,9 +985,8 @@ module.exports = class UtilService {
         try {
             const explainer_props_extended = await UtilService.explainerListExtended();
             const keep = UtilService.extractProps(explainer_props_extended);
-            console.log(keep);
             const result = await UtilService.explainerFieldsWithFilter(keep);
-            console.log(result);
+            console.log("util", result);
             return result;
         } catch (error) {
             console.log(error);
