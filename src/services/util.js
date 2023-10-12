@@ -56,14 +56,14 @@ module.exports = class UtilService {
         const ai_task_parents = UtilService.populateParents(ontology["AITask"]["children"]);
 
         for (const i in expanded_list) {
-            e = expanded_list[i];
+            let e = expanded_list[i];
             e["technique"] = technique_parents[e["technique"]];
             e["explanation_type"] = explanation_type_parents[e["explanation_type"]];
             e["presentations"] = e["presentations"].map((x) => presentation_parents[x]);
             e["ai_methods"] = e["ai_methods"].map((x) => ai_method_parents[x]);
             e["ai_tasks"] = e["ai_tasks"].map((x) => ai_task_parents[x]);
+            expanded_list[i] = e;
         }
-        console.log(expanded_list);
         return expanded_list;
     }
 
@@ -323,7 +323,6 @@ module.exports = class UtilService {
     }
 
     static async explainerFieldsWithFilter(filter) {
-        console.log(filter);
         let output = {
             ExplainabilityTechnique: [],
             DatasetType: [],
