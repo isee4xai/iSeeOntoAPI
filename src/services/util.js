@@ -285,35 +285,35 @@ module.exports = class UtilService {
             NeedsTrainingData: []
         }
         output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-        
+
         output.Explanation = await UtilService.getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-        
+
         output.DatasetType = await UtilService.getQueryForInstances('explainer', 'DatasetType');
-        
+
         output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-        
+
         output.Concurrentness = await UtilService.getQueryForInstances('explainer', 'ExplainerConcurrentness');
-        
+
         output.Scope = await UtilService.getQueryForInstances('explainer', 'ExplanationScope');
-        
+
         output.Portability = await UtilService.getQueryForInstances('explainer', 'Portability');
-        
+
         output.Target = await UtilService.getQueryForInstances('explainer', 'ExplanationTarget');
-        
+
         output.ComputationalComplexity = await UtilService.getQueryForInstances('explainer', 'Time_Complexity');
-        
+
         output.Implementation_Framework = await UtilService.getQueryForInstances('explainer', 'Implementation_Framework');
-        
+
         output.ModelAccess = await UtilService.getQueryForInstances('explainer', 'Model_Access_Type');
-        
+
         output.NeedsTrainingData = await UtilService.getQueryForInstances('explainer', 'needs_training_data');
-        
+
         output.InformationContentEntity = await UtilService.getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-        
+
         output.AIMethod = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-        
+
         output.AITask = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
-        
+
         return output
     }
 
@@ -680,7 +680,7 @@ module.exports = class UtilService {
               ?class rdfs:label ?label .
           }
           order by ?class`;
-          
+
             var data = qs.stringify({
                 'query': query
             });
@@ -964,13 +964,14 @@ module.exports = class UtilService {
 
     }
 
-    static async explainerListExtended(){
+    static async explainerListExtended() {
         try {
             const explainer_props = await UtilService.explainerList();
             const ontology = await UtilService.explainerFields();
             const result = UtilService.expandByOntology(explainer_props, ontology);
             return result;
         } catch (error) {
+            console.log(error);
             return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
         }
     }
@@ -982,6 +983,7 @@ module.exports = class UtilService {
             const result = await UtilService.explainerFields(keep);
             return result;
         } catch (error) {
+            console.log(error);
             return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
         }
     }
@@ -1019,16 +1021,21 @@ module.exports = class UtilService {
     }
 
     static async reuseSupport() {
-        const ontology = await UtilService.explainerFields();
-        const explainer_props = await UtilService.explainerList();
-        const ontology_flat = await UtilService.explainerFieldsFlat();
-        const explainer_props_extended = UtilService.expandByOntology(explainer_props, ontology);
-        const sim_matrix = UtilService.rebuildSimilarity(explainer_props_extended);
-        return {
-            "explainer_props": explainer_props,
-            "explainer_props_extended": explainers_extended,
-            "similarities": sim_matrix,
-            "ontology_props": ontology_flat
-        };
+        try {
+            const ontology = await UtilService.explainerFields();
+            const explainer_props = await UtilService.explainerList();
+            const ontology_flat = await UtilService.explainerFieldsFlat();
+            const explainer_props_extended = UtilService.expandByOntology(explainer_props, ontology);
+            const sim_matrix = UtilService.rebuildSimilarity(explainer_props_extended);
+            return {
+                "explainer_props": explainer_props,
+                "explainer_props_extended": explainers_extended,
+                "similarities": sim_matrix,
+                "ontology_props": ontology_flat
+            };
+        } catch (error) {
+            console.log(error);
+            return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+        }
     }
 }
