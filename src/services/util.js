@@ -277,35 +277,35 @@ module.exports = class UtilService {
             NeedsTrainingData: []
         }
         output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
+        console.log(output);
         output.Explanation = await UtilService.getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-
+        console.log(output);
         output.DatasetType = await UtilService.getQueryForInstances('explainer', 'DatasetType');
-
+        console.log(output);
         output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
+        console.log(output);
         output.Concurrentness = await UtilService.getQueryForInstances('explainer', 'ExplainerConcurrentness');
-
+        console.log(output);
         output.Scope = await UtilService.getQueryForInstances('explainer', 'ExplanationScope');
-
+        console.log(output);
         output.Portability = await UtilService.getQueryForInstances('explainer', 'Portability');
-
+        console.log(output);
         output.Target = await UtilService.getQueryForInstances('explainer', 'ExplanationTarget');
-
+        console.log(output);
         output.ComputationalComplexity = await UtilService.getQueryForInstances('explainer', 'Time_Complexity');
-
+        console.log(output);
         output.Implementation_Framework = await UtilService.getQueryForInstances('explainer', 'Implementation_Framework');
-
+        console.log(output);
         output.ModelAccess = await UtilService.getQueryForInstances('explainer', 'Model_Access_Type');
-
+        console.log(output);
         output.NeedsTrainingData = await UtilService.getQueryForInstances('explainer', 'needs_training_data');
-
+        console.log(output);
         output.InformationContentEntity = await UtilService.getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-
+        console.log(output);
         output.AIMethod = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-
+        console.log(output);
         output.AITask = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
-
+        console.log(output);
         return output
     }
 
@@ -411,7 +411,7 @@ module.exports = class UtilService {
     }
 
     static async getQueryForInstances(ontology, parent) {
-
+        console.log(parent);
         try {
             const query = `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -465,6 +465,7 @@ module.exports = class UtilService {
     }
 
     static async getQueryForClassesWithChildren(rootKey) {
+        console.log(rootKey);
         try {
             const query = `
           prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
