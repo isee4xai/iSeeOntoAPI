@@ -32,13 +32,13 @@ module.exports = class UtilService {
     only tested for depth
     */
     static rebuildSimilarity(explainer_list_expanded) {
-        const matrix = {};
+        let matrix = {};
         for (const i in explainer_list_expanded) {
-            const row = {};
+            let row = {};
             for (const j in explainer_list_expanded) {
-                explainer_i = explainer_list_expanded[i];
-                explainer_j = explainer_list_expanded[j];
-                sim = UtilService.similarityMeasure(explainer_i, explainer_j, UtilService.MEASURES[3]);
+                const explainer_i = explainer_list_expanded[i];
+                const explainer_j = explainer_list_expanded[j];
+                const sim = UtilService.similarityMeasure(explainer_i, explainer_j, UtilService.MEASURES[3]);
                 row[explainer_list_expanded[j]["name"]] = sim;
             }
             matrix[explainer_list_expanded[i]["name"]] = row;
@@ -122,7 +122,7 @@ module.exports = class UtilService {
             return 0.9;
         }
         else {
-            keysToFilter = ['key', 'name']
+            const keysToFilter = ['key', 'name']
             const keys = Object.keys(e1).filter((key) => !keysToFilter.includes(key));
             const count = Object.keys(keys).reduce((acc, k) => {
                 if (e1[k] === e2[k]) {
@@ -146,7 +146,7 @@ module.exports = class UtilService {
             return 0.9;
         }
         else {
-            keysToFilter = ['key', 'name']
+            const keysToFilter = ['key', 'name']
             const keys = Object.keys(e1).filter((key) => !keysToFilter.includes(key));
             const count = Object.keys(keys).reduce((acc, k) => {
                 if (e1[k] === e2[k]) {
@@ -181,7 +181,7 @@ module.exports = class UtilService {
             return 0.9;
         }
         else {
-            keysToFilter = ['key', 'name']
+            const keysToFilter = ['key', 'name']
             const keys = Object.keys(e1).filter((key) => !keysToFilter.includes(key));
             let count = 0;
             for (const k in keys) {
@@ -810,7 +810,6 @@ module.exports = class UtilService {
 
                     // console.log(response.data.results.bindings);
                     var all_values = response.data.results.bindings;
-                    console.log("all_values", all_values);
                     var list_keyed = {}
                     all_values.forEach(single => {
                         if (!list_keyed[single.class.value]) {
@@ -953,7 +952,6 @@ module.exports = class UtilService {
                         })
                         data.push(vals)
                     }
-                    console.log("data", data);
                     return data;
 
                 })
@@ -986,7 +984,6 @@ module.exports = class UtilService {
             const explainer_props_extended = await UtilService.explainerListExtended();
             const keep = UtilService.extractProps(explainer_props_extended);
             const result = await UtilService.explainerFieldsWithFilter(keep);
-            console.log("util", result);
             return result;
         } catch (error) {
             console.log(error);
