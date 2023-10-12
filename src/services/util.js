@@ -1033,12 +1033,13 @@ module.exports = class UtilService {
             const ontology_flat = await UtilService.explainerFieldsFlat();
             const explainer_props_extended = UtilService.expandByOntology(explainer_props, ontology);
             const sim_matrix = UtilService.rebuildSimilarity(explainer_props_extended);
-            return {
+            const result  = {
                 "explainer_props": explainer_props,
-                "explainer_props_extended": explainers_extended,
+                "explainer_props_extended": explainer_props_extended,
                 "similarities": sim_matrix,
                 "ontology_props": ontology_flat
             };
+            return result;
         } catch (error) {
             console.log(error);
             return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
