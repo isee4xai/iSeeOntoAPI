@@ -44,7 +44,7 @@ module.exports = class UtilService {
     }
 
     static expandByOntology(e_list, ontology) {
-        expanded_list = JSON.parse(JSON.stringify(e_list));
+        const expanded_list = JSON.parse(JSON.stringify(e_list));
         const technique_parents = UtilService.populateParents(ontology["ExplainabilityTechnique"]["children"]);
         const explanation_type_parents = UtilService.populateParents(ontology["Explanation"]["children"]);
         const presentation_parents = UtilService.populateParents(ontology["InformationContentEntity"]["children"]);
