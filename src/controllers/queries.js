@@ -158,7 +158,7 @@ module.exports.getUserQuestionTarget = async (req, res) => {
 module.exports.getUserDomain = async (req, res) => {
   try {
     // getQueryForInstances('user', 'Domain').then(function (response) {
-      getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#Domain').then(function (response) {
+    getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/user#Domain').then(function (response) {
       res.status(200).json(response)
     }).catch(function (error) {
       console.log(error);
@@ -197,61 +197,10 @@ module.exports.getKnowledgeLevel = async (req, res) => {
   }
 };
 
-module.exports.getExplainerFieldsFiltered = async (filter) => {
-  let output = {
-    ExplainabilityTechnique: [],
-    DatasetType: [],
-    Explanation: [],
-    Concurrentness: [],
-    Scope: [],
-    Portability: [],
-    Target: [],
-    InformationContentEntity: [],
-    ComputationalComplexity: [],
-    AIMethod: [],
-    AITask: [],
-    Implementation_Framework: [],
-    ModelAccess: [],
-    NeedsTrainingData: []
-  }
-
-  output.ExplainabilityTechnique = await getQueryForClassesFilterWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter.ExplainabilityTechnique);
-
-  output.Explanation = await getQueryForClassesFilterWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation', filter.Explanation);
-
-  output.DatasetType = await getQueryFilterForInstances('explainer', 'DatasetType', filter.DatasetType);
-
-  output.ExplainabilityTechnique = await getQueryForClassesFilterWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters.ExplainabilityTechnique);
-
-  output.Concurrentness = await getQueryFilterForInstances('explainer', 'ExplainerConcurrentness', filter.Concurrentness);
-
-  output.Scope = await getQueryFilterForInstances('explainer', 'ExplanationScope', filter.Scope);
-
-  output.Portability = await getQueryFilterForInstances('explainer', 'Portability', filter.Portability);
-
-  output.Target = await getQueryFilterForInstances('explainer', 'ExplanationTarget', filter.Target);
-
-  output.ComputationalComplexity = await getQueryFilterForInstances('explainer', 'Time_Complexity', filter.ComputationalComplexity);
-
-  output.Implementation_Framework = await getQueryFilterForInstances('explainer', 'Implementation_Framework', filter.Implementation_Framework);
-
-  output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
-
-  output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
-
-  output.InformationContentEntity = await getQueryForClassesFilterWithChildren('http://semanticscience.org/resource/SIO_000015', filter.InformationContentEntity);
-
-  output.AIMethod = await getQueryForClassesFilterWithChildren(SHARED_KEYS.AI_METHOD, filter.AIMethod);
-
-  output.AITask = await getQueryForClassesFilterWithChildren(SHARED_KEYS.AI_TASK, filter.AITask);
-
-  return output
-};
-
 // getExplainerFields 
 module.exports.getExplainerFields = async (req, res) => {
   try {
-    const result = await UtilService.explainerFields();
+    const result = await UtilService.explainerFields({});
     res.status(200).json(result)
 
   } catch (error) {
@@ -261,54 +210,8 @@ module.exports.getExplainerFields = async (req, res) => {
 
 module.exports.getExplainerFieldsFlat = async (req, res) => {
   try {
-
-    let output = {
-      ExplainabilityTechnique: [],
-      DatasetType: [],
-      Explanation: [],
-      Concurrentness: [],
-      Scope: [],
-      Portability: [],
-      Target: [],
-      InformationContentEntity: [],
-      ComputationalComplexity: [],
-      AIMethod: [],
-      AITask: [],
-      Implementation_Framework: [],
-      ModelAccess: [],
-      NeedsTrainingData: []
-    }
-
-    output.ExplainabilityTechnique = await getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-
-    output.Explanation = await getQueryForClassesWithChildrenFlat('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-
-    output.DatasetType = await getQueryForInstancesFlat('explainer', 'DatasetType');
-
-    output.Concurrentness = await getQueryForInstancesFlat('explainer', 'ExplainerConcurrentness');
-
-    output.Scope = await getQueryForInstancesFlat('explainer', 'ExplanationScope');
-
-    output.Portability = await getQueryForInstancesFlat('explainer', 'Portability');
-
-    output.Target = await getQueryForInstancesFlat('explainer', 'ExplanationTarget');
-
-    output.ComputationalComplexity = await getQueryForInstancesFlat('explainer', 'Time_Complexity');
-
-    output.Implementation_Framework = await getQueryForInstancesFlat('explainer', 'Implementation_Framework');
-
-    output.ModelAccess = await getQueryForInstancesFlat('explainer', 'ModelAccess');
-
-    output.NeedsTraining_Data = await getQueryForInstancesFlat('explainer', 'NeedsTrainingData');
-
-    output.InformationContentEntity = await getQueryForClassesWithChildrenFlat('http://semanticscience.org/resource/SIO_000015');
-
-    output.AIMethod = await getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_METHOD);
-
-    output.AITask = await getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_TASK);
-
-
-    res.status(200).json(output)
+    const result = await UtilService.explainerFieldsFlat({});
+    res.status(200).json(result)
 
   } catch (error) {
     res.status(500).json({ message: error });
@@ -451,95 +354,6 @@ function getQueryForInstances(ontology, parent) {
 
 }
 
-function getQueryFilterForInstances(ontology, parent, filter) {
-
-  try {
-    const query = `
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    
-    SELECT distinct ?class ?label
-    WHERE {
-        ?class rdf:type <http://www.w3id.org/iSeeOnto/`+ ontology + `#` + parent + `> .
-        ?class rdfs:label ?label .
-    }
-    order by ?class`;
-
-    console.log(query)
-    var data = qs.stringify({
-      'query': query
-    });
-    var config = {
-      method: 'post',
-      url: endpointUrl,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
-
-    return axios(config)
-      .then(function (response) {
-        const parsed = parseFilterClasses(response, filter);
-        return parsed;
-      })
-      .catch(function (error) {
-        console.log("error - inner: ", error)
-
-        return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
-      });
-
-  } catch (error) {
-    return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
-  }
-
-}
-
-
-function getQueryForInstancesFlat(ontology, parent) {
-
-  try {
-    const query = `
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    
-    SELECT distinct ?class ?label
-    WHERE {
-        ?class rdf:type <http://www.w3id.org/iSeeOnto/`+ ontology + `#` + parent + `> .
-        ?class rdfs:label ?label .
-    }
-    order by ?class`;
-
-    console.log(query)
-    var data = qs.stringify({
-      'query': query
-    });
-    var config = {
-      method: 'post',
-      url: endpointUrl,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
-
-    return axios(config)
-      .then(function (response) {
-        const parsed = parseClassesFlat(response);
-        return parsed;
-      })
-      .catch(function (error) {
-        console.log("error - inner: ", error)
-
-        return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
-      });
-
-  } catch (error) {
-    return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
-  }
-
-}
-
 function getQueryForInstancesOther(key) {
 
   try {
@@ -626,90 +440,6 @@ function getQueryForClassesWithChildren(rootKey) {
 
 }
 
-function getQueryForClassesFilterWithChildren(rootKey, filter) {
-  try {
-    const query = `
-    prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT distinct ?class ?label ?parent
-    WHERE {
-        ?class rdfs:label ?label .
-        ?class rdfs:subClassOf* <`+ rootKey + `>.
-  		?class rdfs:subClassOf ?parent
-    }
-    order by ?class`;
-    console.log(query)
-
-
-    var data = qs.stringify({
-      'query': query
-    });
-    var config = {
-      method: 'post',
-      url: endpointUrl,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
-
-    return axios(config)
-      .then(function (response) {
-        const parsed = parseFilterWithChildren(response, rootKey, filter);
-        return parsed;
-      })
-      .catch(function (error) {
-        console.log("error - inner: ", error)
-        return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
-      });
-
-  } catch (error) {
-    return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
-  }
-
-}
-
-function getQueryForClassesWithChildrenFlat(rootKey) {
-  try {
-    const query = `
-    prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT distinct ?class ?label ?parent
-    WHERE {
-        ?class rdfs:label ?label .
-        ?class rdfs:subClassOf* <`+ rootKey + `>.
-  		?class rdfs:subClassOf ?parent
-    }
-    order by ?class`;
-    console.log(query)
-
-
-    var data = qs.stringify({
-      'query': query
-    });
-    var config = {
-      method: 'post',
-      url: endpointUrl,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
-
-    return axios(config)
-      .then(function (response) {
-        const parsed = parseWithChildrenFlat(response, rootKey);
-        return parsed;
-      })
-      .catch(function (error) {
-        console.log("error - inner: ", error)
-        return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
-      });
-
-  } catch (error) {
-    return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
-  }
-
-}
-
 function parseClasses(data) {
   var parse = [];
   const results = data.data.results.bindings;
@@ -718,62 +448,6 @@ function parseClasses(data) {
   });
 
   return parse;
-}
-
-function parseFilterClasses(data, filter) {
-  var parse = [];
-  const results = data.data.results.bindings;
-  results.forEach(c => {
-    parse.push({ "key": c.class.value, "label": c.label.value })
-  });
-
-  // Filter the parse array
-  if (filter.length > 0) {
-    parse = parse.filter(obj => filter.includes(obj.key));
-  }
-
-  return parse;
-}
-
-function parseClassesFlat(data) {
-  var parse = {};
-  const results = data.data.results.bindings;
-  results.forEach(c => {
-    parse[c.class.value] = c.label.value
-  });
-  return parse;
-}
-
-function parseFilterWithChildren(data, rootKey, filter) {
-  var parse = [];
-  const results = data.data.results.bindings;
-  results.forEach(c => {
-    parse.push({ "key": c.class.value, "label": c.label.value, "parent": c.parent.value })
-  });
-
-  // Filter the parse array
-  if (filter.length > 0) {
-    parse = parse.filter(obj => filter.includes(obj.key));
-  }
-
-  var nodes = {}
-  var root = new Node(rootKey, rootKey, rootKey)
-  nodes[rootKey] = root;
-
-  parse.forEach(c => {
-    var n = new Node(c.key, c.label, c.parent)
-    nodes[c.key] = n
-  })
-
-  parse.forEach(c => {
-    var temp = nodes[c.parent];
-    // Only if a parent exists add it
-    if (temp) {
-      temp.addChild(nodes[c.key])
-    }
-  })
-
-  return nodes[rootKey]
 }
 
 function parseWithChildren(data, rootKey) {
@@ -803,15 +477,6 @@ function parseWithChildren(data, rootKey) {
   return nodes[rootKey]
 }
 
-function parseWithChildrenFlat(data, rootKey) {
-  var parse = {};
-  const results = data.data.results.bindings;
-  results.forEach(c => {
-    parse[c.class.value] = c.label.value
-  });
-
-  return parse
-}
 
 // Required for subclasses based methods
 class Node {

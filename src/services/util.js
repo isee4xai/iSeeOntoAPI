@@ -1,3 +1,6 @@
+const qs = require('qs');
+const axios = require('axios');
+const { v4 } = require('uuid');
 module.exports = class UtilService {
     static MEASURES = ['common_attributes', 'weighted_ca', 'cosine', 'depth', 'detail'];
 
@@ -256,7 +259,7 @@ module.exports = class UtilService {
         }
     }
 
-    static async explainerFields() {
+    static async explainerFields(filter) {
         let output = {
             ExplainabilityTechnique: [],
             DatasetType: [],
@@ -273,40 +276,90 @@ module.exports = class UtilService {
             ModelAccess: [],
             NeedsTrainingData: []
         }
+        output.ExplainabilityTechnique = await UtilService.getQueryForClassesFilterWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter.ExplainabilityTechnique);
 
-        output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
+        output.Explanation = await UtilService.getQueryForClassesFilterWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation', filter.Explanation);
 
-        output.Explanation = await UtilService.getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
+        output.DatasetType = await UtilService.getQueryFilterForInstances('explainer', 'DatasetType', filter.DatasetType);
 
-        output.DatasetType = await UtilService.getQueryForInstances('explainer', 'DatasetType');
+        output.ExplainabilityTechnique = await UtilService.getQueryForClassesFilterWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters.ExplainabilityTechnique);
 
-        // output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
+        output.Concurrentness = await UtilService.getQueryFilterForInstances('explainer', 'ExplainerConcurrentness', filter.Concurrentness);
 
-        output.Concurrentness = await UtilService.getQueryForInstances('explainer', 'ExplainerConcurrentness');
+        output.Scope = await UtilService.getQueryFilterForInstances('explainer', 'ExplanationScope', filter.Scope);
 
-        output.Scope = await UtilService.getQueryForInstances('explainer', 'ExplanationScope');
+        output.Portability = await UtilService.getQueryFilterForInstances('explainer', 'Portability', filter.Portability);
 
-        output.Portability = await UtilService.getQueryForInstances('explainer', 'Portability');
+        output.Target = await UtilService.getQueryFilterForInstances('explainer', 'ExplanationTarget', filter.Target);
 
-        output.Target = await UtilService.getQueryForInstances('explainer', 'ExplanationTarget');
+        output.ComputationalComplexity = await UtilService.getQueryFilterForInstances('explainer', 'Time_Complexity', filter.ComputationalComplexity);
 
-        output.ComputationalComplexity = await UtilService.getQueryForInstances('explainer', 'Time_Complexity');
+        output.Implementation_Framework = await UtilService.getQueryFilterForInstances('explainer', 'Implementation_Framework', filter.Implementation_Framework);
 
-        output.Implementation_Framework = await UtilService.getQueryForInstances('explainer', 'Implementation_Framework');
+        output.ModelAccess = await UtilService.getQueryFilterForInstances('explainer', 'Model_Access_Type');
 
-        output.ModelAccess = await UtilService.getQueryForInstances('explainer', 'Model_Access_Type');
+        output.NeedsTrainingData = await UtilService.getQueryFilterForInstances('explainer', 'needs_training_data');
 
-        output.NeedsTrainingData = await UtilService.getQueryForInstances('explainer', 'needs_training_data');
+        output.InformationContentEntity = await UtilService.getQueryForClassesFilterWithChildren('http://semanticscience.org/resource/SIO_000015', filter.InformationContentEntity);
 
-        output.InformationContentEntity = await UtilService.getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
+        output.AIMethod = await UtilService.getQueryForClassesFilterWithChildren(SHARED_KEYS.AI_METHOD, filter.AIMethod);
 
-        output.AIMethod = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
+        output.AITask = await UtilService.getQueryForClassesFilterWithChildren(SHARED_KEYS.AI_TASK, filter.AITask);
 
-        output.AITask = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);
         return output
     }
 
-    static async getQueryForInstances(ontology, parent) {
+    static async explainerFieldsFlat() {
+        let output = {
+            ExplainabilityTechnique: [],
+            DatasetType: [],
+            Explanation: [],
+            Concurrentness: [],
+            Scope: [],
+            Portability: [],
+            Target: [],
+            InformationContentEntity: [],
+            ComputationalComplexity: [],
+            AIMethod: [],
+            AITask: [],
+            Implementation_Framework: [],
+            ModelAccess: [],
+            NeedsTrainingData: []
+        }
+        output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filter.ExplainabilityTechnique);
+
+        output.Explanation = await UtilService.getQueryForClassesWithChildrenFlat('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation', filter.Explanation);
+
+        output.DatasetType = await UtilService.getQueryForInstancesFlat('explainer', 'DatasetType', filter.DatasetType);
+
+        output.ExplainabilityTechnique = await UtilService.getQueryForClassesWithChildrenFlat('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique', filters.ExplainabilityTechnique);
+
+        output.Concurrentness = await UtilService.getQueryForInstancesFlat('explainer', 'ExplainerConcurrentness', filter.Concurrentness);
+
+        output.Scope = await UtilService.getQueryForInstancesFlat('explainer', 'ExplanationScope', filter.Scope);
+
+        output.Portability = await UtilService.getQueryForInstancesFlat('explainer', 'Portability', filter.Portability);
+
+        output.Target = await UtilService.getQueryForInstancesFlat('explainer', 'ExplanationTarget', filter.Target);
+
+        output.ComputationalComplexity = await UtilService.getQueryForInstancesFlat('explainer', 'Time_Complexity', filter.ComputationalComplexity);
+
+        output.Implementation_Framework = await UtilService.getQueryForInstancesFlat('explainer', 'Implementation_Framework', filter.Implementation_Framework);
+
+        output.ModelAccess = await UtilService.getQueryForInstancesFlat('explainer', 'Model_Access_Type');
+
+        output.NeedsTrainingData = await UtilService.getQueryForInstancesFlat('explainer', 'needs_training_data');
+
+        output.InformationContentEntity = await UtilService.getQueryForClassesWithChildrenFlat('http://semanticscience.org/resource/SIO_000015', filter.InformationContentEntity);
+
+        output.AIMethod = await UtilService.getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_METHOD, filter.AIMethod);
+
+        output.AITask = await UtilService.getQueryForClassesWithChildrenFlat(SHARED_KEYS.AI_TASK, filter.AITask);
+
+        return output
+    }
+
+    static async getQueryFilterForInstances(ontology, parent, filter) {
 
         try {
             const query = `
@@ -335,7 +388,7 @@ module.exports = class UtilService {
 
             return axios(config)
                 .then(function (response) {
-                    const parsed = UtilService.parseClasses(response);
+                    const parsed = UtilService.parseFilterClasses(response, filter);
                     return parsed;
                 })
                 .catch(function (error) {
@@ -350,17 +403,22 @@ module.exports = class UtilService {
 
     }
 
-    static parseClasses(data) {
+    static parseFilterClasses(data, filter) {
         var parse = [];
         const results = data.data.results.bindings;
         results.forEach(c => {
             parse.push({ "key": c.class.value, "label": c.label.value })
         });
 
+        // Filter the parse array
+        if (filter.length > 0) {
+            parse = parse.filter(obj => filter.includes(obj.key));
+        }
+
         return parse;
     }
 
-    static async getQueryForClassesWithChildren(rootKey) {
+    static async getQueryForClassesFilterWithChildren(rootKey, filter) {
         try {
             const query = `
           prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -388,7 +446,7 @@ module.exports = class UtilService {
 
             return axios(config)
                 .then(function (response) {
-                    const parsed = UtilService.parseWithChildren(response, rootKey);
+                    const parsed = UtilService.parseFilterWithChildren(response, rootKey, filter);
                     return parsed;
                 })
                 .catch(function (error) {
@@ -402,12 +460,17 @@ module.exports = class UtilService {
 
     }
 
-    static parseWithChildren(data, rootKey) {
+    static parseFilterWithChildren(data, rootKey, filter) {
         var parse = [];
         const results = data.data.results.bindings;
         results.forEach(c => {
             parse.push({ "key": c.class.value, "label": c.label.value, "parent": c.parent.value })
         });
+
+        // Filter the parse array
+        if (filter.length > 0) {
+            parse = parse.filter(obj => filter.includes(obj.key));
+        }
 
         var nodes = {}
         var root = new Node(rootKey, rootKey, rootKey)
@@ -427,5 +490,373 @@ module.exports = class UtilService {
         })
 
         return nodes[rootKey]
+    }
+
+    static async getQueryForInstancesFlat(ontology, parent) {
+
+        try {
+            const query = `
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          
+          SELECT distinct ?class ?label
+          WHERE {
+              ?class rdf:type <http://www.w3id.org/iSeeOnto/`+ ontology + `#` + parent + `> .
+              ?class rdfs:label ?label .
+          }
+          order by ?class`;
+
+            console.log(query)
+            var data = qs.stringify({
+                'query': query
+            });
+            var config = {
+                method: 'post',
+                url: endpointUrl,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    const parsed = parseClassesFlat(response);
+                    return parsed;
+                })
+                .catch(function (error) {
+                    console.log("error - inner: ", error)
+
+                    return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+                });
+
+        } catch (error) {
+            return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+        }
+
+    }
+
+    static async getQueryForClassesWithChildrenFlat(rootKey) {
+        try {
+            const query = `
+          prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          SELECT distinct ?class ?label ?parent
+          WHERE {
+              ?class rdfs:label ?label .
+              ?class rdfs:subClassOf* <`+ rootKey + `>.
+                ?class rdfs:subClassOf ?parent
+          }
+          order by ?class`;
+            console.log(query)
+
+
+            var data = qs.stringify({
+                'query': query
+            });
+            var config = {
+                method: 'post',
+                url: endpointUrl,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    const parsed = UtilService.parseWithChildrenFlat(response, rootKey);
+                    return parsed;
+                })
+                .catch(function (error) {
+                    console.log("error - inner: ", error)
+                    return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+                });
+
+        } catch (error) {
+            return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+        }
+
+    }
+
+    static parseWithChildrenFlat(data, rootKey) {
+        var parse = {};
+        const results = data.data.results.bindings;
+        results.forEach(c => {
+            parse[c.class.value] = c.label.value
+        });
+
+        return parse
+    }
+
+    static parseClassesFlat(data) {
+        var parse = {};
+        const results = data.data.results.bindings;
+        results.forEach(c => {
+            parse[c.class.value] = c.label.value
+        });
+        return parse;
+    }
+
+    static async explainerList() {
+
+        try {
+            const query = `
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+          
+          SELECT *
+          WHERE {
+              ?class a <http://www.w3id.org/iSeeOnto/explainer#Explainer>;
+              exp:utilises ?utilises.
+              {?class ?property ?value}
+              UNION 
+              {
+              ?utilises ?property ?value
+              }
+              # {?value rdfs:label ?label} 
+          }
+          `;
+
+            var data = qs.stringify({
+                'query': query
+            });
+            var config = {
+                method: 'post',
+                url: endpointUrl,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+
+                    console.log(response.data.results.bindings);
+                    var all_values = response.data.results.bindings;
+                    var list_keyed = {}
+                    all_values.forEach(single => {
+                        if (!list_keyed[single.class.value]) {
+                            list_keyed[single.class.value] = []
+                        }
+                        list_keyed[single.class.value].push(single)
+                    });
+
+                    var data = []
+                    for (let instance in list_keyed) {
+                        // Per Instance
+                        var vals = {
+                            key: "",
+                            name: "",
+                            explainer_description: "",
+                            technique: "",
+                            dataset_type: "",
+                            explanation_type: "",
+                            explanation_description: "",
+                            concurrentness: "",
+                            portability: "",
+                            scope: "",
+                            target: "",
+                            presentations: [],
+                            computational_complexity: "",
+                            ai_methods: [],
+                            ai_tasks: [],
+                            implementation: [],
+                            metadata: "",
+                            model_access: "",
+                            needs_training_data: false
+                        }
+                        vals.key = v4();
+
+                        list_keyed[instance].forEach(p => {
+                            // Per Property
+                            // Name
+                            if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#label") {
+                                var name = p.value.value.replace('_', '/').replace('_', '/');
+                                if (!name.includes('technique')) {
+                                    vals.name = name;
+                                }
+                            }
+
+                            // Description
+                            if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
+                                var description = p.value.value;
+                                if (description.includes('EXPLAINER_DESCRIPTION')) {
+                                    vals.explainer_description = description.substring(description.indexOf('=') + 1);
+                                }
+                            }
+
+                            // ExplainabilityTechnique
+                            if (p.property.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
+                                if (!p.value.value.includes('NamedIndividual')) {
+                                    vals.technique = p.value.value;
+                                }
+                            }
+
+                            // Dataset Type
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#isCompatibleWithFeatureTypes") {
+                                vals.dataset_type = p.value.value;
+                            }
+
+                            // Explanation Type
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasOutputType") {
+                                vals.explanation_type = p.value.value;
+                            }
+
+                            // Explanation Description
+                            if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
+                                var description = p.value.value;
+                                if (description.includes('EXPLANATION_DESCRIPTION')) {
+                                    vals.explanation_description = description.substring(description.indexOf('=') + 1);
+                                }
+                            }
+
+                            // Explainer Concurrentness
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasConcurrentness") {
+                                vals.concurrentness = p.value.value;
+                            }
+
+                            // Explainer Portability
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasPortability") {
+                                vals.portability = p.value.value;
+                            }
+
+                            // Explanation Scope
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasExplanationScope") {
+                                vals.scope = p.value.value;
+                            }
+
+                            // Explanation Target
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#targetType") {
+                                vals.target = p.value.value;
+                            }
+
+                            // Presentation Format
+                            if (p.property.value == "https://purl.org/heals/eo#hasPresentation") {
+                                vals.presentations.push(p.value.value)
+                            }
+
+                            // Computational Complexity
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasComplexity") {
+                                vals.computational_complexity = p.value.value;
+                            }
+
+                            // Applicable AI Methods
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasApplicableMethodType") {
+                                vals.ai_methods.push(p.value.value)
+                            }
+
+                            // Applicable AI Tasks
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#applicableProblemType") {
+                                vals.ai_tasks.push(p.value.value)
+                            }
+                            // Implementation Framework	
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasBackend") {
+                                vals.implementation.push(p.value.value)
+                            }
+
+                            // Needs Training Data
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needsTrainingData") {
+                                vals.needs_training_data = p.value.value;
+                            }
+
+                            // Model Access
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#modelAccessType") {
+                                vals.model_access = p.value.value;
+                            }
+
+                            // Metadata
+                            if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
+                                var metadata = p.value.value;
+                                if (metadata.includes('META_DESCRIPTION')) {
+                                    vals.metadata = JSON.stringify(metadata.substring(metadata.indexOf('=') + 1));
+                                }
+                            }
+
+                        })
+                        data.push(vals)
+                    }
+
+                    return data;
+
+                })
+                .catch(function (error) {
+                    console.log("error - inner: ", error)
+
+                    return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+                });
+
+        } catch (error) {
+            return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+        }
+
+    }
+
+    static async explainerListExtended(){
+        try {
+            const explainer_props = await UtilService.explainerList();
+            const ontology = await UtilService.explainerFields({});
+            const result = UtilService.expandByOntology(explainer_props, ontology);
+            return result;
+        } catch (error) {
+            return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+        }
+    }
+
+    static async explainerFieldsFiltered() {
+        try {
+            const explainer_props_extended = await UtilService.explainerListExtended();
+            const keep = UtilService.extractProps(explainer_props_extended);
+            const result = await UtilService.explainerFields(keep);
+            return result;
+        } catch (error) {
+            return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+        }
+    }
+
+    static extractProps(e_props_extended) {
+        let output = {
+            ExplainabilityTechnique: [],
+            DatasetType: [],
+            Explanation: [],
+            Concurrentness: [],
+            Scope: [],
+            Portability: [],
+            Target: [],
+            InformationContentEntity: [],
+            ComputationalComplexity: [],
+            AIMethod: [],
+            AITask: [],
+            Implementation_Framework: []
+        };
+        for (const i in e_props_extended) {
+            e_extended = e_props_extended[i];
+            output.ExplainabilityTechnique.push(...e_extended.technique);
+            output.DatasetType.push(e_extended.dataset_type);
+            output.Explanation.push(...e_extended.explanation_type);
+            output.Concurrentness.push(e_extended.concurrentness);
+            output.Scope.push(e_extended.scope);
+            output.Portability.push(e_extended.portability);
+            output.Target.push(e_extended.target);
+            output.InformationContentEntity.push(...[].concat(...e_extended.presentations));
+            output.ComputationalComplexity.push(e_extended.computational_complexity);
+            output.AIMethod.push(...[].concat(...e_extended.ai_methods));
+            output.AITask.push(...[].concat(...e_extended.ai_tasks));
+            output.Implementation_Framework.push(...[].concat(...e_extended.implementation));
+        }
+    }
+
+    static async reuseSupport() {
+        const ontology = await UtilService.explainerFields({});
+        const explainer_props = await UtilService.explainerList();
+        const ontology_flat = await UtilService.explainerFieldsFlat();
+        const explainer_props_extended = UtilService.expandByOntology(explainer_props, ontology);
+        const sim_matrix = UtilService.rebuildSimilarity(explainer_props_extended);
+        return {
+            "explainer_props": explainer_props,
+            "explainer_props_extended": explainers_extended,
+            "similarities": sim_matrix,
+            "ontology_props": ontology_flat
+        };
     }
 }
