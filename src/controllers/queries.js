@@ -5,6 +5,7 @@ var qs = require('qs');
 // IN => Instances of
 require('dotenv').config();
 const UtilService = require("../services/util");
+const Node = require("../services/node");
 
 const BASE_URL = process.env.SPAQRL_ENDPOINT;
 const endpointUrl = BASE_URL + 'sparql'
@@ -478,19 +479,6 @@ function parseWithChildren(data, rootKey) {
   return nodes[rootKey]
 }
 
-
-// Required for subclasses based methods
-class Node {
-  constructor(key, label, parent) {
-    this.key = key;
-    this.label = label;
-    this.parent = parent;
-    this.children = [];
-  }
-  addChild(child) {
-    this.children.push(child)
-  }
-}
 
 
 module.exports.dump = async (req, res) => {

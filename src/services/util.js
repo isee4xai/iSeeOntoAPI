@@ -2,6 +2,8 @@ const qs = require('qs');
 const axios = require('axios');
 const { v4 } = require('uuid');
 
+const Node = require("./node");
+
 require('dotenv').config();
 
 const BASE_URL = process.env.SPAQRL_ENDPOINT;
