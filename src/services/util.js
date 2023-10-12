@@ -1,6 +1,12 @@
 const qs = require('qs');
 const axios = require('axios');
 const { v4 } = require('uuid');
+
+require('dotenv').config();
+
+const BASE_URL = process.env.SPAQRL_ENDPOINT;
+const endpointUrl = BASE_URL + 'sparql'
+
 module.exports = class UtilService {
     static MEASURES = ['common_attributes', 'weighted_ca', 'cosine', 'depth', 'detail'];
 
