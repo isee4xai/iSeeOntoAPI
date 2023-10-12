@@ -260,6 +260,7 @@ module.exports = class UtilService {
     }
 
     static async explainerFields(filter) {
+        console.log(filter);
         let output = {
             ExplainabilityTechnique: [],
             DatasetType: [],
@@ -373,7 +374,6 @@ module.exports = class UtilService {
           }
           order by ?class`;
 
-            console.log(query)
             var data = qs.stringify({
                 'query': query
             });
@@ -388,6 +388,7 @@ module.exports = class UtilService {
 
             return axios(config)
                 .then(function (response) {
+                    console.log(parent, response);
                     const parsed = UtilService.parseFilterClasses(response, filter);
                     return parsed;
                 })
@@ -429,8 +430,6 @@ module.exports = class UtilService {
                 ?class rdfs:subClassOf ?parent
           }
           order by ?class`;
-            console.log(query)
-
 
             var data = qs.stringify({
                 'query': query
@@ -446,6 +445,7 @@ module.exports = class UtilService {
 
             return axios(config)
                 .then(function (response) {
+                    console.log(rootKey, response);
                     const parsed = UtilService.parseFilterWithChildren(response, rootKey, filter);
                     return parsed;
                 })
@@ -505,8 +505,7 @@ module.exports = class UtilService {
               ?class rdfs:label ?label .
           }
           order by ?class`;
-
-            console.log(query)
+          
             var data = qs.stringify({
                 'query': query
             });
@@ -547,8 +546,6 @@ module.exports = class UtilService {
                 ?class rdfs:subClassOf ?parent
           }
           order by ?class`;
-            console.log(query)
-
 
             var data = qs.stringify({
                 'query': query
@@ -632,7 +629,7 @@ module.exports = class UtilService {
             return axios(config)
                 .then(function (response) {
 
-                    console.log(response.data.results.bindings);
+                    // console.log(response.data.results.bindings);
                     var all_values = response.data.results.bindings;
                     var list_keyed = {}
                     all_values.forEach(single => {
