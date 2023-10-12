@@ -1031,8 +1031,11 @@ module.exports = class UtilService {
             const ontology = await UtilService.explainerFields();
             const explainer_props = await UtilService.explainerList();
             const ontology_flat = await UtilService.explainerFieldsFlat();
+            console.log("ontology_flat", ontology_flat);
             const explainer_props_extended = UtilService.expandByOntology(explainer_props, ontology);
+            console.log("explainer_props_extended", explainer_props_extended);
             const sim_matrix = UtilService.rebuildSimilarity(explainer_props_extended);
+            console.log("sim_matrix", sim_matrix);
             const result  = {
                 "explainer_props": explainer_props,
                 "explainer_props_extended": explainer_props_extended,
