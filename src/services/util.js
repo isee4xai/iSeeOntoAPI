@@ -207,7 +207,7 @@ module.exports = class UtilService {
                     const cosine_weight = UtilService.ontologyWeightCosine(e1[keys[k]], e2[keys[k]]);
                     for (const p in e1[keys[k]]) {
                         for (const q in e2[keys[k]]) {
-                            _weight = UtilService.ontologyWeight(keys[k], e1[keys[k]][p], e2[keys[k]][q], measure) * cosine_weight;
+                            const _weight = UtilService.ontologyWeight(keys[k], e1[keys[k]][p], e2[keys[k]][q], measure) * cosine_weight;
                             if (_weight > 0) {
                                 if (firstWeight) {
                                     weightComplex = _weight;
