@@ -44,6 +44,7 @@ module.exports = class UtilService {
     }
 
     static expandByOntology(e_list, ontology) {
+
         const expanded_list = JSON.parse(JSON.stringify(e_list));
         const technique_parents = UtilService.populateParents(ontology["ExplainabilityTechnique"]["children"]);
         const explanation_type_parents = UtilService.populateParents(ontology["Explanation"]["children"]);
@@ -59,6 +60,7 @@ module.exports = class UtilService {
             e["ai_methods"] = e["ai_methods"].map((x) => ai_method_parents[x]);
             e["ai_tasks"] = e["ai_tasks"].map((x) => ai_task_parents[x]);
         }
+        console.log(expanded_list);
         return expanded_list;
     }
 
@@ -806,6 +808,7 @@ module.exports = class UtilService {
 
                     // console.log(response.data.results.bindings);
                     var all_values = response.data.results.bindings;
+                    console.log("all_values", all_values);
                     var list_keyed = {}
                     all_values.forEach(single => {
                         if (!list_keyed[single.class.value]) {
@@ -948,7 +951,7 @@ module.exports = class UtilService {
                         })
                         data.push(vals)
                     }
-
+                    console.log("data", data);
                     return data;
 
                 })
@@ -967,7 +970,9 @@ module.exports = class UtilService {
     static async explainerListExtended() {
         try {
             const explainer_props = await UtilService.explainerList();
+            console.log(explainer_props);
             const ontology = await UtilService.explainerFields();
+            console.log(ontology);
             const result = UtilService.expandByOntology(explainer_props, ontology);
             return result;
         } catch (error) {
