@@ -200,7 +200,7 @@ module.exports.getKnowledgeLevel = async (req, res) => {
 // getExplainerFields 
 module.exports.getExplainerFields = async (req, res) => {
   try {
-    const result = await UtilService.explainerFields({});
+    const result = await UtilService.explainerFields();
     res.status(200).json(result)
 
   } catch (error) {
