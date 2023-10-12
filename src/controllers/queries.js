@@ -4,6 +4,7 @@ var qs = require('qs');
 // SN => Subclass with children nodes
 // IN => Instances of
 require('dotenv').config();
+const UtilService = require("../services/util");
 
 const BASE_URL = process.env.SPAQRL_ENDPOINT;
 const endpointUrl = BASE_URL + 'sparql'
@@ -250,54 +251,8 @@ module.exports.getExplainerFieldsFiltered = async (filter) => {
 // getExplainerFields 
 module.exports.getExplainerFields = async (req, res) => {
   try {
-    let output = {
-      ExplainabilityTechnique: [],
-      DatasetType: [],
-      Explanation: [],
-      Concurrentness: [],
-      Scope: [],
-      Portability: [],
-      Target: [],
-      InformationContentEntity: [],
-      ComputationalComplexity: [],
-      AIMethod: [],
-      AITask: [],
-      Implementation_Framework: [],
-      ModelAccess: [],
-      NeedsTrainingData: []
-    }
-  
-    output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-  
-    output.Explanation = await getQueryForClassesWithChildren('http://linkedu.eu/dedalo/explanationPattern.owl#Explanation');
-  
-    output.DatasetType = await getQueryForInstances('explainer', 'DatasetType');
-  
-    // output.ExplainabilityTechnique = await getQueryForClassesWithChildren('http://www.w3id.org/iSeeOnto/explainer#ExplainabilityTechnique');
-  
-    output.Concurrentness = await getQueryForInstances('explainer', 'ExplainerConcurrentness');
-  
-    output.Scope = await getQueryForInstances('explainer', 'ExplanationScope');
-  
-    output.Portability = await getQueryForInstances('explainer', 'Portability');
-  
-    output.Target = await getQueryForInstances('explainer', 'ExplanationTarget');
-  
-    output.ComputationalComplexity = await getQueryForInstances('explainer', 'Time_Complexity');
-  
-    output.Implementation_Framework = await getQueryForInstances('explainer', 'Implementation_Framework');
-  
-    output.ModelAccess = await getQueryForInstances('explainer', 'Model_Access_Type');
-  
-    output.NeedsTrainingData = await getQueryForInstances('explainer', 'needs_training_data');
-  
-    output.InformationContentEntity = await getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
-  
-    output.AIMethod = await getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
-  
-    output.AITask = await getQueryForClassesWithChildren(SHARED_KEYS.AI_TASK);  
-
-    res.status(200).json(output)
+    const result = await UtilService.explainerFields();
+    res.status(200).json(result)
 
   } catch (error) {
     res.status(500).json({ message: error });
