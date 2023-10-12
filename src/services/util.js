@@ -972,9 +972,7 @@ module.exports = class UtilService {
     static async explainerListExtended() {
         try {
             const explainer_props = await UtilService.explainerList();
-            console.log(explainer_props);
             const ontology = await UtilService.explainerFields();
-            console.log(ontology);
             const result = UtilService.expandByOntology(explainer_props, ontology);
             return result;
         } catch (error) {
@@ -987,7 +985,9 @@ module.exports = class UtilService {
         try {
             const explainer_props_extended = await UtilService.explainerListExtended();
             const keep = UtilService.extractProps(explainer_props_extended);
-            const result = await UtilService.explainerFields(keep);
+            console.log(keep);
+            const result = await UtilService.explainerFieldsWithFilter(keep);
+            console.log(result);
             return result;
         } catch (error) {
             console.log(error);
@@ -1011,7 +1011,7 @@ module.exports = class UtilService {
             Implementation_Framework: []
         };
         for (const i in e_props_extended) {
-            e_extended = e_props_extended[i];
+            const e_extended = e_props_extended[i];
             output.ExplainabilityTechnique.push(...e_extended.technique);
             output.DatasetType.push(e_extended.dataset_type);
             output.Explanation.push(...e_extended.explanation_type);
@@ -1025,6 +1025,7 @@ module.exports = class UtilService {
             output.AITask.push(...[].concat(...e_extended.ai_tasks));
             output.Implementation_Framework.push(...[].concat(...e_extended.implementation));
         }
+        return output;
     }
 
     static async reuseSupport() {
