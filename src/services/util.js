@@ -359,9 +359,9 @@ module.exports = class UtilService {
 
         output.Implementation_Framework = await UtilService.getQueryFilterForInstances('explainer', 'Implementation_Framework', filter.Implementation_Framework);
 
-        output.ModelAccess = await UtilService.getQueryFilterForInstances('explainer', 'Model_Access_Type');
+        output.ModelAccess = await UtilService.getQueryFilterForInstances('explainer', 'Model_Access_Type', filter.ModelAccess);
 
-        output.NeedsTrainingData = await UtilService.getQueryFilterForInstances('explainer', 'needs_training_data');
+        output.NeedsTrainingData = await UtilService.getQueryFilterForInstances('explainer', 'needs_training_data', filter.NeedsTrainingData);
 
         output.InformationContentEntity = await UtilService.getQueryForClassesFilterWithChildren('http://semanticscience.org/resource/SIO_000015', filter.InformationContentEntity);
 
