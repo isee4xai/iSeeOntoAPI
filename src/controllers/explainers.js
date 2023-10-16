@@ -218,7 +218,7 @@ module.exports.insertExplainer = async (req, res) => {
 							 exp:utilises ?technique ;
                ` + implementation_insert + `
                exp:has_model_access ?model_access ;
-               exp:needs_training_data "http://www.w3id.org/iSeeOnto/explainer#needs_training_data true .														 										
+               exp:needs_training_data {`"http://www.w3id.org/iSeeOnto/explainer#needs_training_data"`} true .														 										
 				} WHERE {
 					VALUES ?isee { "http://www.semanticweb.org/isee/iseeonto/2022/9/30#" } .
 					VALUES ?exp_iri { "http://www.w3id.org/iSeeOnto/explainer#" } . 
