@@ -161,11 +161,13 @@ function getBindMultipleValues(object_property, my_multiple_select_values) {
 /// insert an explainer into the ontology
 // http://localhost:3100/api/onto/getExplainers
 module.exports.insertExplainer = async (req, res) => {
+  console.log("Step 1 start insert");
   if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
     console.log("Unauth access");
     res.status(400).json({ message: "Unauthorised Access!" });
     return;
   } else {
+    console.log("Step 2 auth ok");
     const data = req.body.data; // json body
 
     try {
@@ -183,6 +185,8 @@ module.exports.insertExplainer = async (req, res) => {
       var implementation_bind = getBindMultipleValues("imp_framework_text", data.implementation);
       var ai_method_bind = getBindMultipleValues("aimethod_class_text", data.ai_methods);
       var ai_task_bind = getBindMultipleValues("aitask_class_text", data.ai_tasks);
+
+      console.log("Step 3 auth ok"); 
 
       const query = `
 			
@@ -236,7 +240,7 @@ module.exports.insertExplainer = async (req, res) => {
 					VALUES ?port_text { "`+ data.portability + `" } .
 					VALUES ?target_text { "`+ data.target + `" } .
           VALUES ?model_access_text { "`+ data.model_access + `" } . 
-          VALUES ?training_data_text {"`+ 1 + `" } . 
+          VALUES ?training_data_text {`+ data.needs_training_data + `} . 
 					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
 					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') + `" } . ` + presentations + `VALUES ?complexity_text { "` + data.complexity + `" } . 
 					` + implementation + `VALUES ?explanation_type_class_text { "` + data.explanation_type[data.explanation_type.length - 1] + `" } . 
@@ -265,6 +269,8 @@ module.exports.insertExplainer = async (req, res) => {
         'update': query
       });
 
+      console.log("dataquery", dataquery);
+
       var config = {
         method: 'post',
         url: BASE_URL_EXPLAINERS + 'update',
@@ -273,6 +279,8 @@ module.exports.insertExplainer = async (req, res) => {
         },
         data: dataquery
       };
+
+      console.log("config", config);
 
       return axios(config)
         .then(function (response) {
@@ -285,9 +293,10 @@ module.exports.insertExplainer = async (req, res) => {
           console.log("error - inner: ", error)
           res.status(500).json({ error: error });
         });
-
+	    
     } catch (error) {
       return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
     }
   }
+
 }
