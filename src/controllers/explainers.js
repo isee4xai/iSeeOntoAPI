@@ -218,7 +218,7 @@ module.exports.insertExplainer = async (req, res) => {
 							 exp:utilises ?technique ;
                ` + implementation_insert + `
                exp:has_model_access ?model_access ;
-               exp:needs_training_data ?training_data .														 										
+               exp:needs_training_data "http://www.w3id.org/iSeeOnto/explainer#needs_training_data true .														 										
 				} WHERE {
 					VALUES ?isee { "http://www.semanticweb.org/isee/iseeonto/2022/9/30#" } .
 					VALUES ?exp_iri { "http://www.w3id.org/iSeeOnto/explainer#" } . 
@@ -236,7 +236,7 @@ module.exports.insertExplainer = async (req, res) => {
 					VALUES ?port_text { "`+ data.portability + `" } .
 					VALUES ?target_text { "`+ data.target + `" } .
           VALUES ?model_access_text { "`+ data.model_access + `" } . 
-          VALUES ?training_data_text {"`+ 1 + `" } . 
+          VALUES ?training_data_text {"`+ "http://www.w3id.org/iSeeOnto/explainer#needs_training_data" + `" } . 
 					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
 					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') + `" } . ` + presentations + `VALUES ?complexity_text { "` + data.complexity + `" } . 
 					` + implementation + `VALUES ?explanation_type_class_text { "` + data.explanation_type[data.explanation_type.length - 1] + `" } . 
