@@ -161,13 +161,11 @@ function getBindMultipleValues(object_property, my_multiple_select_values) {
 /// insert an explainer into the ontology
 // http://localhost:3100/api/onto/getExplainers
 module.exports.insertExplainer = async (req, res) => {
-  console.log("Step 1 start insert");
   if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
     console.log("Unauth access");
     res.status(400).json({ message: "Unauthorised Access!" });
     return;
   } else {
-    console.log("Step 2 auth ok");
     const data = req.body.data; // json body
 
     try {
@@ -185,8 +183,6 @@ module.exports.insertExplainer = async (req, res) => {
       var implementation_bind = getBindMultipleValues("imp_framework_text", data.implementation);
       var ai_method_bind = getBindMultipleValues("aimethod_class_text", data.ai_methods);
       var ai_task_bind = getBindMultipleValues("aitask_class_text", data.ai_tasks);
-
-      console.log("Step 3"); 
 
       const query = `
 			
@@ -209,7 +205,7 @@ module.exports.insertExplainer = async (req, res) => {
 									   exp:hasPortability ?portability ; 
 									   exp:targetType ?target_type ; 
 									   exp:hasOutputType  ?explanation_type_class ; 
-									   ` + presentations_insert + ai_method_insert + ai_task_insert + `
+									   ` + presentations_insert + implementation_insert + ai_method_insert + ai_task_insert + `
 									   exp:hasComplexity ?complexity .
 								
 								
@@ -219,9 +215,7 @@ module.exports.insertExplainer = async (req, res) => {
 							   rdfs:comment ?comment_explanation_description ;
 							 rdf:type exp:Explainer ; 
 							 rdf:type owl:NamedIndividual ;
-							 exp:utilises ?technique ;
-               ` + implementation_insert + `
-               exp:has_model_access ?model_access .														 										
+							 exp:utilises ?technique .														 										
 				} WHERE {
 					VALUES ?isee { "http://www.semanticweb.org/isee/iseeonto/2022/9/30#" } .
 					VALUES ?exp_iri { "http://www.w3id.org/iSeeOnto/explainer#" } . 
@@ -230,7 +224,7 @@ module.exports.insertExplainer = async (req, res) => {
 			
 					# this is the block of values we have to change for each insertion
 					VALUES ?exp_tech_type_text { "`+ data.technique[data.technique.length - 1] + `" } . # we have to edit here the type of the explainability technique
-					VALUES ?comment_metadata { "META_DESCRIPTION=`+ "" + ` } .
+					VALUES ?comment_metadata { "META_DESCRIPTION=`+ JSON.stringify(data.metadata).substring(1) + ` } .
 					VALUES ?comment_explainer_description { "EXPLAINER_DESCRIPTION=`+ data.explainer_description + `" } .
 					VALUES ?comment_explanation_description { "EXPLANATION_DESCRIPTION=`+ data.explanation_description + `" } .
 					VALUES ?dataset_type_text { "`+ data.dataset_type + `" } .
@@ -238,8 +232,7 @@ module.exports.insertExplainer = async (req, res) => {
 					VALUES ?scope_text { "`+ data.scope + `" } .
 					VALUES ?port_text { "`+ data.portability + `" } .
 					VALUES ?target_text { "`+ data.target + `" } .
-          VALUES ?model_access_text { "`+ data.model_access + `" } . 
-          VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
+					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
 					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') + `" } . ` + presentations + `VALUES ?complexity_text { "` + data.complexity + `" } . 
 					` + implementation + `VALUES ?explanation_type_class_text { "` + data.explanation_type[data.explanation_type.length - 1] + `" } . 
 					` + ai_method + ai_task + `	
@@ -254,19 +247,16 @@ module.exports.insertExplainer = async (req, res) => {
 					BIND( IRI(?complexity_text) as ?complexity) .
 					BIND( IRI(?aimethod_text) as ?aimethod) .
 					BIND( IRI(?aitask_text) as ?aitask) .
-          BIND( IRI(?model_access_text) as ?model_access) .
-          BIND( IRI(?explanation_type_class_text) as ?explanation_type_class) . 
+					BIND( IRI(?explanation_type_class_text) as ?explanation_type_class) . 
 					` + presentations_bind + implementation_bind + ai_method_bind + ai_task_bind + `					
 				}	
 				`;
 
-      console.log("query", query);
+      console.log(query)
 
       var dataquery = qs.stringify({
         'update': query
       });
-
-      console.log("dataquery", dataquery);
 
       var config = {
         method: 'post',
@@ -277,27 +267,17 @@ module.exports.insertExplainer = async (req, res) => {
         data: dataquery
       };
 
-      console.log("config: ", config);
-
-      try {
-        let response = null;
-        try{
-          response = axios(config);
-        }
-        catch (error) {
-          console.log(error);
-          console.log(error.response.data);
+      return axios(config)
+        .then(function (response) {
+          res.status(200).json({ response: response.data });
+        })
+        .catch(function (error) {
+          console.log("error - inner: ", error)
           res.status(500).json({ error: error });
-        }
-        res.status(200).json({ response: response.data });
-      }
-      catch (error) {
-        console.log("error - inner: ", error)
-        res.status(500).json({ error: error });
-      }
+        });
+
     } catch (error) {
       return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
     }
   }
-
 }
