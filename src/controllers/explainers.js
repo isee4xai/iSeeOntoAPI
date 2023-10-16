@@ -240,7 +240,7 @@ module.exports.insertExplainer = async (req, res) => {
 					VALUES ?port_text { "`+ data.portability + `" } .
 					VALUES ?target_text { "`+ data.target + `" } .
           VALUES ?model_access_text { "`+ data.model_access + `" } . 
-          VALUES ?training_data_text {"`+ "http://www.w3.org/2001/XMLSchema#true" + `" } . 
+          VALUES ?training_data_text {`+ 1 + ` } . 
 					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
 					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') + `" } . ` + presentations + `VALUES ?complexity_text { "` + data.complexity + `" } . 
 					` + implementation + `VALUES ?explanation_type_class_text { "` + data.explanation_type[data.explanation_type.length - 1] + `" } . 
