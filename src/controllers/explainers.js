@@ -161,12 +161,13 @@ function getBindMultipleValues(object_property, my_multiple_select_values) {
 /// insert an explainer into the ontology
 // http://localhost:3100/api/onto/getExplainers
 module.exports.insertExplainer = async (req, res) => {
-
+  console.log("Step 1 start insert");
   if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
     console.log("Unauth access");
     res.status(400).json({ message: "Unauthorised Access!" });
     return;
   } else {
+    console.log("Step 2 auth ok");
     const data = req.body.data; // json body
 
     try {
@@ -184,6 +185,8 @@ module.exports.insertExplainer = async (req, res) => {
       var implementation_bind = getBindMultipleValues("imp_framework_text", data.implementation);
       var ai_method_bind = getBindMultipleValues("aimethod_class_text", data.ai_methods);
       var ai_task_bind = getBindMultipleValues("aitask_class_text", data.ai_tasks);
+
+      console.log("Step 3 auth ok"); 
 
       const query = `
 			
@@ -260,11 +263,13 @@ module.exports.insertExplainer = async (req, res) => {
 				}	
 				`;
 
-      console.log(query)
+      console.log("query", query);
 
       var dataquery = qs.stringify({
         'update': query
       });
+
+      console.log("dataquery", dataquery);
 
       var config = {
         method: 'post',
@@ -274,6 +279,8 @@ module.exports.insertExplainer = async (req, res) => {
         },
         data: dataquery
       };
+
+      console.log("config", config);
 
       try {
         const response = axios(config);
