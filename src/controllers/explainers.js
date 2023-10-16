@@ -279,6 +279,9 @@ module.exports.insertExplainer = async (req, res) => {
           res.status(200).json({ response: response.data });
         })
         .catch(function (error) {
+          console.log(error.message);
+          console.log(error.request);
+          console.log(error.response);
           console.log("error - inner: ", error)
           res.status(500).json({ error: error });
         });
