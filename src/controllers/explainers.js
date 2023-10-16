@@ -221,8 +221,7 @@ module.exports.insertExplainer = async (req, res) => {
 							 rdf:type owl:NamedIndividual ;
 							 exp:utilises ?technique ;
                ` + implementation_insert + `
-               exp:has_model_access ?model_access ;
-               exp:needs_training_data 1 .														 										
+               exp:has_model_access ?model_access .														 										
 				} WHERE {
 					VALUES ?isee { "http://www.semanticweb.org/isee/iseeonto/2022/9/30#" } .
 					VALUES ?exp_iri { "http://www.w3id.org/iSeeOnto/explainer#" } . 
@@ -281,7 +280,15 @@ module.exports.insertExplainer = async (req, res) => {
       console.log("config: ", config);
 
       try {
-        const response = axios(config);
+        let response = null;
+        try{
+          response = axios(config);
+        }
+        catch (error) {
+          console.log(error);
+          console.log(error.response.data);
+          res.status(500).json({ error: error });
+        }
         res.status(200).json({ response: response.data });
       }
       catch (error) {
