@@ -227,7 +227,7 @@ module.exports.insertExplainer = async (req, res) => {
 			
 					# this is the block of values we have to change for each insertion
 					VALUES ?exp_tech_type_text { "`+ data.technique[data.technique.length - 1] + `" } . # we have to edit here the type of the explainability technique
-					VALUES ?comment_metadata { "META_DESCRIPTION=`+ "" + ` } .
+					VALUES ?comment_metadata { "META_DESCRIPTION=""`+ " " + ` } .
 					VALUES ?comment_explainer_description { "EXPLAINER_DESCRIPTION=`+ data.explainer_description + `" } .
 					VALUES ?comment_explanation_description { "EXPLANATION_DESCRIPTION=`+ data.explanation_description + `" } .
 					VALUES ?dataset_type_text { "`+ data.dataset_type + `" } .
