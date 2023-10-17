@@ -808,7 +808,6 @@ module.exports = class UtilService {
             return axios(config)
                 .then(function (response) {
 
-                    console.log("retrieval response", response.data.results.bindings);
                     var all_values = response.data.results.bindings;
                     var list_keyed = {}
                     all_values.forEach(single => {
@@ -821,6 +820,7 @@ module.exports = class UtilService {
                     var data = []
                     for (let instance in list_keyed) {
                         // Per Instance
+                        console.log(list_keyed[instance]);
                         var vals = {
                             key: "",
                             name: "",
