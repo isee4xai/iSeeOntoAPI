@@ -235,8 +235,7 @@ module.exports.insertExplainer = async (req, res) => {
 					VALUES ?scope_text { "`+ data.scope + `" } .
 					VALUES ?port_text { "`+ data.portability + `" } .
 					VALUES ?target_text { "`+ data.target + `" } .
-          VALUES ?model_access_text { "`+ data.model_access + `" } . 
-          VALUES ?training_data_text {`+ data.needs_training_data ? "http://www.w3.org/2001/XMLSchema#true" : "http://www.w3.org/2001/XMLSchema#false" + `} . 
+          VALUES ?model_access_text { "`+ data.model_access + `" } .
 					VALUES ?tech_text { "`+ data.name.replaceAll('/', '_') + "_technique" + `" } .
 					VALUES ?exp_text { "`+ data.name.replaceAll('/', '_') + `" } . ` + presentations + `VALUES ?complexity_text { "` + data.complexity + `" } . 
 					` + implementation + `VALUES ?explanation_type_class_text { "` + data.explanation_type[data.explanation_type.length - 1] + `" } . 
@@ -253,7 +252,7 @@ module.exports.insertExplainer = async (req, res) => {
 					BIND( IRI(?aimethod_text) as ?aimethod) .
 					BIND( IRI(?aitask_text) as ?aitask) .
           BIND( IRI(?model_access_text) as ?model_access) .
-          BIND( IRI(?training_data_text) as ?training_data) .
+          BIND( `+data.needs_training_data+` as ?training_data) .
 					BIND( IRI(?explanation_type_class_text) as ?explanation_type_class) . 
 					` + presentations_bind + implementation_bind + ai_method_bind + ai_task_bind + `					
 				}	
