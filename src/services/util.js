@@ -820,6 +820,7 @@ module.exports = class UtilService {
                     var data = []
                     for (let instance in list_keyed) {
                         // Per Instance
+                        console.log(list_keyed[instance]);
                         var vals = {
                             key: "",
                             name: "",
@@ -932,7 +933,6 @@ module.exports = class UtilService {
 
                             // Needs Training Data
                             if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needsTrainingData") {
-                                console.log("needsTrainingData", p);
                                 vals.needs_training_data = p.value.value;
                             }
 
