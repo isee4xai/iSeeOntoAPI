@@ -311,8 +311,6 @@ module.exports = class UtilService {
 
         output.ModelAccess = await UtilService.getQueryForInstances('explainer', 'Model_Access_Type');
 
-        output.NeedsTrainingData = await UtilService.getQueryForInstances('explainer', 'needs_training_data');
-
         output.InformationContentEntity = await UtilService.getQueryForClassesWithChildren('http://semanticscience.org/resource/SIO_000015');
 
         output.AIMethod = await UtilService.getQueryForClassesWithChildren(SHARED_KEYS.AI_METHOD);
@@ -410,8 +408,6 @@ module.exports = class UtilService {
         output.Implementation_Framework = await UtilService.getQueryForInstancesFlat('explainer', 'Implementation_Framework');
 
         output.ModelAccess = await UtilService.getQueryForInstancesFlat('explainer', 'Model_Access_Type');
-
-        output.NeedsTrainingData = await UtilService.getQueryForInstancesFlat('explainer', 'needs_training_data');
 
         output.InformationContentEntity = await UtilService.getQueryForClassesWithChildrenFlat('http://semanticscience.org/resource/SIO_000015');
 
