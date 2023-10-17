@@ -808,7 +808,7 @@ module.exports = class UtilService {
             return axios(config)
                 .then(function (response) {
 
-                    // console.log(response.data.results.bindings);
+                    console.log("retrieval response", response.data.results.bindings);
                     var all_values = response.data.results.bindings;
                     var list_keyed = {}
                     all_values.forEach(single => {
