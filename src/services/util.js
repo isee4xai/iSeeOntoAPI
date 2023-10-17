@@ -932,12 +932,12 @@ module.exports = class UtilService {
                             }
 
                             // Needs Training Data
-                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needsTrainingData") {
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needs_training_data") {
                                 vals.needs_training_data = p.value.value;
                             }
 
                             // Model Access
-                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#modelAccessType") {
+                            if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#has_model_access") {
                                 vals.model_access = p.value.value;
                             }
 
