@@ -298,14 +298,14 @@ module.exports.anyQueryAdmin = async (req, res) => {
   } else {
     try {
       const query = req.body.query;
-      console.log(query)
-
+      console.log(query);
+      
       var data = qs.stringify({
-        'query': query
+        'update': query
       });
       var config = {
         method: 'post',
-        url: endpointUrl,
+        url: BASE_URL_EXPLAINERS + 'update',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
