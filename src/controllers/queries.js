@@ -586,3 +586,45 @@ module.exports.anyQueryAdmin = async (req, res) => {
 
 
 }
+
+module.exports.anyUpdateAdmin = async (req, res) => {
+
+  if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
+    console.log("Unauth access");
+    res.status(400).json({ message: "Unauthorised Access!" });
+    return;
+  } else {
+    try {
+      const query = req.body.query;
+      console.log(query)
+
+      var data = qs.stringify({
+        'update': query
+      });
+      var config = {
+        method: 'post',
+        url: BASE_URL + 'update',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: data
+      };
+
+      return axios(config)
+        .then(function (response) {
+          console.log(response.data)
+          res.status(200).json({ response: response.data });
+        })
+        .catch(function (error) {
+          console.log("error - inner: ", error)
+          res.status(500).json({ error: error });
+
+        });
+
+    } catch (error) {
+      return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+    }
+  }
+
+
+}

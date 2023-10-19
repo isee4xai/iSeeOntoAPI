@@ -7,6 +7,6 @@ const explainersctrl = require('../controllers/explainers');
 router.post('/dump_explainers', explainersctrl.dumpExplainers);
 router.post('/insert', explainersctrl.insertExplainer); // adding a new explainer into the ontology
 router.get('/list', explainersctrl.list);
-router.post('/anyQueryAdmin', explainersctrl.anyQueryAdmin);
+router.post('/anyUpdateAdmin', explainersctrl.anyUpdateAdmin);
 
 module.exports = router;

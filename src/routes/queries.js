@@ -36,5 +36,6 @@ router.get('/cockpit/Explainers', queryctrl.getCockpitExplainers);
 // Dump the existing ontology
 router.post('/dump', queryctrl.dump);
 router.post('/anyQueryAdmin', queryctrl.anyQueryAdmin);
+router.post('/anyUpdateAdmin', queryctrl.anyUpdateAdmin);
 
 module.exports = router;

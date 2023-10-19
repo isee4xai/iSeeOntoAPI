@@ -289,7 +289,7 @@ module.exports.insertExplainer = async (req, res) => {
 
 }
 
-module.exports.anyQueryAdmin = async (req, res) => {
+module.exports.anyUpdateAdmin = async (req, res) => {
 
   if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
     console.log("Unauth access");
