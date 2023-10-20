@@ -15,7 +15,7 @@ const SHARED_KEYS = { AI_TASK: 'https://purl.org/heals/eo#AITask', AI_METHOD: 'h
 module.exports = class UtilService {
     static MEASURES = ['common_attributes', 'weighted_ca', 'cosine', 'depth', 'detail'];
 
-    static SIMPLE_PROPERTIES = ['dataset_type', 'concurrentness', 'scope', 'portability', 'target', 'computational_complexity']; //add model access and need data here
+    static SIMPLE_PROPERTIES = ['dataset_type', 'concurrentness', 'scope', 'portability', 'target', 'computational_complexity', 'model_access', 'needs_training_data']; 
     static COMPLEX_PROPERTIES = ['technique', 'explanation_type'];
     static SIMPLE_MULTI_PROPERTIES = ['implementation'];
     static COMPLEX_MULTI_PROPERTIES = ['presentations', 'ai_tasks', 'ai_methods'];
@@ -23,10 +23,10 @@ module.exports = class UtilService {
     static PROP_WEIGHTS = {
         'technique': 0.8, 'dataset_type': 1, 'concurrentness': 0.7, 'scope': 0.7, 'portability': 1,
         'target': 1, 'presentations': 0.5, 'explanation_type': 0.6, 'computational_complexity': 0.1, 'ai_methods': 1,
-        'ai_tasks': 1, 'implementation': 0.9, 'metadata': 1
+        'ai_tasks': 1, 'implementation': 0.9, 'model_access': 1, 'needs_training_data': 1
     };
 
-    static WEIGHTS_TOTAL = 10.2999;
+    static WEIGHTS_TOTAL = 11.2999;
 
     /*
     only tested for depth
@@ -172,7 +172,7 @@ module.exports = class UtilService {
 
     static applyMeasureParents(e1, e2, measure) {
         if (e1['name'] == e2['name']) {
-            return 1
+            return 1;
         }
         else if (e1['dataset_type'] !== e2['dataset_type']) {
             return 0;
@@ -180,6 +180,17 @@ module.exports = class UtilService {
         else if (e1['technique'] === e2['technique']) {
             return 0.9;
         }
+        else if (e1['needs_training_data'] === false && e2['needs_training_data'] === true){ 
+			// - if needsTrainingData: true, it should retrieve explainers with needsTrainingData true and false; 
+			// - if NeedsTrainingData = false, it should retrieve explainers with needsTrainingData: False
+			return 0;		
+		}
+		else if (e1['model_access'] !== e2['model_access'] && e1['model_access'] !== 'http://www.w3id.org/iSeeOnto/explainer#Any_access' && e2['model_access'] !== 'http://www.w3id.org/iSeeOnto/explainer#Any_access'){
+			// - if it is File, it should retrieve explainers with modelAccess: File, AND Any; 
+			// - if it is URL, it should retrieve explainers with modelAccess: URL, AND Any; 
+			// - if it is Any, it should retrieve explainers with modelAccess: File, AND URL, AND Any;
+			return 0;
+		}
         else {
             const keysToFilter = ['key', 'name']
             const keys = Object.keys(e1).filter((key) => !keysToFilter.includes(key));
@@ -1018,6 +1029,8 @@ module.exports = class UtilService {
             output.AIMethod.push(...[].concat(...e_extended.ai_methods));
             output.AITask.push(...[].concat(...e_extended.ai_tasks));
             output.Implementation_Framework.push(...[].concat(...e_extended.implementation));
+			output.ModelAccess.push(e_extended.model_access);
+			output.NeedsTrainingData.push(e_extended.needs_training_data);
         }
         return output;
     }
