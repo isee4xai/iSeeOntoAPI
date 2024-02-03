@@ -330,3 +330,47 @@ module.exports.anyUpdateAdmin = async (req, res) => {
 
 
 }
+
+
+module.exports.delete = async (req, res) => {
+
+  if (req.body.ISEE_ADMIN_KEY != process.env.ISEE_ADMIN_KEY) {
+    console.log("Unauth access");
+    res.status(400).json({ message: "Unauthorised Access!" });
+    return;
+  } else {
+    try {
+      const e_id = req.query.id;
+      console.log("Deleting Explainer"+e_id);
+      
+      // var data = qs.stringify({
+      //   'update': query
+      // });
+      // var config = {
+      //   method: 'post',
+      //   url: BASE_URL_EXPLAINERS + 'update',
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   },
+      //   data: data
+      // };
+
+      // return axios(config)
+      //   .then(function (response) {
+      //     console.log(response.data)
+      //     res.status(200).json({ response: response.data });
+      //   })
+      //   .catch(function (error) {
+      //     console.log("error - inner: ", error)
+      //     res.status(500).json({ error: error });
+
+      //   });
+      res.status(200).json({ message: "Not Implemented" });
+
+    } catch (error) {
+      return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+    }
+  }
+
+
+}
