@@ -340,8 +340,8 @@ module.exports.delete = async (req, res) => {
     return;
   } else {
     try {
-      const e_id = req.query.id;
-      console.log("Deleting Explainer"+e_id);
+      const data = req.body.data;
+      console.log("Deleting Explainer"+data);
       
       // var data = qs.stringify({
       //   'update': query
