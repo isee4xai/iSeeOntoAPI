@@ -827,7 +827,6 @@ module.exports = class UtilService {
                     var data = []
                     for (let instance in list_keyed) {
                         // Per Instance
-                        console.log(list_keyed[instance]);
                         var vals = {
                             key: "",
                             name: "",
