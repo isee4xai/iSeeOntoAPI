@@ -381,6 +381,7 @@ module.exports.delete = async (req, res) => {
       prefix pur: <https://purl.org/heals/eo#>
       prefix rsc: <http://semanticscience.org/resource/>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      prefix xsd: <http://www.w3.org/2001/XMLSchema#>
       
       DELETE
       WHERE {
