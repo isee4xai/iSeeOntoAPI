@@ -359,6 +359,7 @@ module.exports.delete = async (req, res) => {
       }
       `;
 
+      console.log("query", query_one);
       var data = qs.stringify({
         'query': query_one
       });
