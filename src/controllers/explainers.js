@@ -514,6 +514,7 @@ module.exports.delete = async (req, res) => {
                   })
                   data.push(vals)
               }
+              console.log(data);
               return data;
 
           })
