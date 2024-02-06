@@ -342,7 +342,7 @@ module.exports.delete = async (req, res) => {
   else {
     try {
       const explainer = req.body.data.id;
-      console.log("Deleting Explainer " + explainer);
+      console.log("Deleting Explainer Instance " + explainer);
 
       const query_one = `
 			prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
@@ -359,7 +359,7 @@ module.exports.delete = async (req, res) => {
               ?p ?o .
       }
       `;
-      console.log(query_one);
+      
       var data = qs.stringify({
         'update': query_one
       });
@@ -371,10 +371,9 @@ module.exports.delete = async (req, res) => {
         },
         data: data
       };
-
       
       const response_one = await axios(config);
-      console.log(response_one);
+      console.log("Deleting Explainer Technique Instance " + explainer);
 
       const query_two = `
 			prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
@@ -392,8 +391,6 @@ module.exports.delete = async (req, res) => {
       }
       `;
 
-      console.log(query_two);
-
       var data = qs.stringify({
         'update': query_two
       });
@@ -405,15 +402,12 @@ module.exports.delete = async (req, res) => {
         },
         data: data
       };
-
       
       const response_two = await axios(config);
-
-      console.log(response_two.data);
       res.status(200).json({ response: response_two.data });
 
     } catch (error) {
-      return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
+      return { message: "SPARQL SERVER UPDATE ERROR", error: error };
     }
   }
 
