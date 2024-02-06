@@ -344,35 +344,35 @@ module.exports.delete = async (req, res) => {
       const explainer = req.body.data.id;
       console.log("Deleting Explainer " + explainer);
 
-      const query_one = `
-      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
-      prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      prefix owl: <http://www.w3.org/2002/07/owl#>
-      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+      // const query_one = `
+      // prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+      // prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      // prefix owl: <http://www.w3.org/2002/07/owl#>
+      // prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      // prefix xsd: <http://www.w3.org/2001/XMLSchema#>
       
-      DELETE
-      WHERE {
-        ?t rdfs:label "`+ explainer.replaceAll('/', '_') + `"^^xsd:string ;
-              ?p ?o .
-      }
-      `;
-      console.log(query_one);
-      var data = qs.stringify({
-        'update': query_one
-      });
-      var config = {
-        method: 'post',
-        url: BASE_URL_EXPLAINERS + 'update',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: data
-      };
+      // DELETE
+      // WHERE {
+      //   ?t rdfs:label "`+ explainer.replaceAll('/', '_') + `"^^xsd:string ;
+      //         ?p ?o .
+      // }
+      // `;
+      // console.log(query_one);
+      // var data = qs.stringify({
+      //   'update': query_one
+      // });
+      // var config = {
+      //   method: 'post',
+      //   url: BASE_URL_EXPLAINERS + 'update',
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   },
+      //   data: data
+      // };
 
       
-      const response_one = await axios(config);
-      console.log(response_one);
+      // const response_one = await axios(config);
+      // console.log(response_one);
 
       const query_two = `
       prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
@@ -383,7 +383,7 @@ module.exports.delete = async (req, res) => {
       
       DELETE
       WHERE {
-        ?t rdfs:label "`+ explainer.replaceAll('/', '_') + "_technique"+`"^^xsd:string ;
+        ?t rdfs:label "_Tabular_LIME_technique"^^xsd:string ;
               ?p ?o .
       }
       `;
