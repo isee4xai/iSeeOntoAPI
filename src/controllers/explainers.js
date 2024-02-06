@@ -349,182 +349,184 @@ module.exports.delete = async (req, res) => {
       
       SELECT *
       WHERE {
-        ?t rdfs:label "`+explainer.replaceAll('/', '_')+`"^^xsd:string ;
+        ?t rdfs:label "`+ explainer.replaceAll('/', '_') + `"^^xsd:string ;
               ?p ?o .
-        ?t2 rdfs:label "`+explainer.replaceAll('/', '_')+ "_technique"+`"^^xsd:string ;
+        ?t2 rdfs:label "`+ explainer.replaceAll('/', '_') + "_technique" + `"^^xsd:string ;
               ?p2 ?o2 . 
       }
-    `;
+      `;
+
+      console.log(query);
 
       var data = qs.stringify({
-          'query': query
+        'query': query
       });
       var config = {
-          method: 'post',
-          url: explainersURL,
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          data: data
+        method: 'post',
+        url: explainersURL,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: data
       };
 
       return axios(config)
-          .then(function (response) {
-
-              var all_values = response.data.results.bindings;
-              var list_keyed = {}
-              all_values.forEach(single => {
-                  if (!list_keyed[single.class.value]) {
-                      list_keyed[single.class.value] = []
-                  }
-                  list_keyed[single.class.value].push(single)
-              });
-
-              var data = []
-              for (let instance in list_keyed) {
-                  // Per Instance
-                  var vals = {
-                      key: "",
-                      name: "",
-                      explainer_description: "",
-                      technique: "",
-                      dataset_type: "",
-                      explanation_type: "",
-                      explanation_description: "",
-                      concurrentness: "",
-                      portability: "",
-                      scope: "",
-                      target: "",
-                      presentations: [],
-                      computational_complexity: "",
-                      ai_methods: [],
-                      ai_tasks: [],
-                      implementation: [],
-                      metadata: "",
-                      model_access: "",
-                      needs_training_data: false
-                  }
-                  vals.key = v4();
-
-                  list_keyed[instance].forEach(p => {
-                      // Per Property
-                      // Name
-                      if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#label") {
-                          var name = p.value.value.replace('_', '/').replace('_', '/');
-                          if (!name.includes('technique')) {
-                              vals.name = name;
-                          }
-                      }
-
-                      // Description
-                      if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
-                          var description = p.value.value;
-                          if (description.includes('EXPLAINER_DESCRIPTION')) {
-                              vals.explainer_description = description.substring(description.indexOf('=') + 1);
-                          }
-                      }
-
-                      // ExplainabilityTechnique
-                      if (p.property.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
-                          if (!p.value.value.includes('NamedIndividual')) {
-                              vals.technique = p.value.value;
-                          }
-                      }
-
-                      // Dataset Type
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#isCompatibleWithFeatureTypes") {
-                          vals.dataset_type = p.value.value;
-                      }
-
-                      // Explanation Type
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasOutputType") {
-                          vals.explanation_type = p.value.value;
-                      }
-
-                      // Explanation Description
-                      if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
-                          var description = p.value.value;
-                          if (description.includes('EXPLANATION_DESCRIPTION')) {
-                              vals.explanation_description = description.substring(description.indexOf('=') + 1);
-                          }
-                      }
-
-                      // Explainer Concurrentness
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasConcurrentness") {
-                          vals.concurrentness = p.value.value;
-                      }
-
-                      // Explainer Portability
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasPortability") {
-                          vals.portability = p.value.value;
-                      }
-
-                      // Explanation Scope
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasExplanationScope") {
-                          vals.scope = p.value.value;
-                      }
-
-                      // Explanation Target
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#targetType") {
-                          vals.target = p.value.value;
-                      }
-
-                      // Presentation Format
-                      if (p.property.value == "https://purl.org/heals/eo#hasPresentation") {
-                          vals.presentations.push(p.value.value)
-                      }
-
-                      // Computational Complexity
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasComplexity") {
-                          vals.computational_complexity = p.value.value;
-                      }
-
-                      // Applicable AI Methods
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasApplicableMethodType") {
-                          vals.ai_methods.push(p.value.value)
-                      }
-
-                      // Applicable AI Tasks
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#applicableProblemType") {
-                          vals.ai_tasks.push(p.value.value)
-                      }
-                      // Implementation Framework	
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasBackend") {
-                          vals.implementation.push(p.value.value)
-                      }
-
-                      // Needs Training Data
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needs_training_data") {
-                          vals.needs_training_data = p.value.value;
-                      }
-
-                      // Model Access
-                      if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#has_model_access") {
-                          vals.model_access = p.value.value;
-                      }
-
-                      // Metadata
-                      if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
-                          var metadata = p.value.value;
-                          if (metadata.includes('META_DESCRIPTION')) {
-                              vals.metadata = JSON.stringify(metadata.substring(metadata.indexOf('=') + 1));
-                          }
-                      }
-
-                  })
-                  data.push(vals)
-              }
-              console.log(data);
-              return data;
-
-          })
-          .catch(function (error) {
-              console.log("error - inner: ", error)
-
-              return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+        .then(function (response) {
+          console.log(response);
+          var all_values = response.data.results.bindings;
+          var list_keyed = {}
+          all_values.forEach(single => {
+            if (!list_keyed[single.class.value]) {
+              list_keyed[single.class.value] = []
+            }
+            list_keyed[single.class.value].push(single)
           });
 
-  } catch (error) {
+          var data = []
+          for (let instance in list_keyed) {
+            // Per Instance
+            var vals = {
+              key: "",
+              name: "",
+              explainer_description: "",
+              technique: "",
+              dataset_type: "",
+              explanation_type: "",
+              explanation_description: "",
+              concurrentness: "",
+              portability: "",
+              scope: "",
+              target: "",
+              presentations: [],
+              computational_complexity: "",
+              ai_methods: [],
+              ai_tasks: [],
+              implementation: [],
+              metadata: "",
+              model_access: "",
+              needs_training_data: false
+            }
+            vals.key = v4();
+
+            list_keyed[instance].forEach(p => {
+              // Per Property
+              // Name
+              if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#label") {
+                var name = p.value.value.replace('_', '/').replace('_', '/');
+                if (!name.includes('technique')) {
+                  vals.name = name;
+                }
+              }
+
+              // Description
+              if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
+                var description = p.value.value;
+                if (description.includes('EXPLAINER_DESCRIPTION')) {
+                  vals.explainer_description = description.substring(description.indexOf('=') + 1);
+                }
+              }
+
+              // ExplainabilityTechnique
+              if (p.property.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
+                if (!p.value.value.includes('NamedIndividual')) {
+                  vals.technique = p.value.value;
+                }
+              }
+
+              // Dataset Type
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#isCompatibleWithFeatureTypes") {
+                vals.dataset_type = p.value.value;
+              }
+
+              // Explanation Type
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasOutputType") {
+                vals.explanation_type = p.value.value;
+              }
+
+              // Explanation Description
+              if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
+                var description = p.value.value;
+                if (description.includes('EXPLANATION_DESCRIPTION')) {
+                  vals.explanation_description = description.substring(description.indexOf('=') + 1);
+                }
+              }
+
+              // Explainer Concurrentness
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasConcurrentness") {
+                vals.concurrentness = p.value.value;
+              }
+
+              // Explainer Portability
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasPortability") {
+                vals.portability = p.value.value;
+              }
+
+              // Explanation Scope
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasExplanationScope") {
+                vals.scope = p.value.value;
+              }
+
+              // Explanation Target
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#targetType") {
+                vals.target = p.value.value;
+              }
+
+              // Presentation Format
+              if (p.property.value == "https://purl.org/heals/eo#hasPresentation") {
+                vals.presentations.push(p.value.value)
+              }
+
+              // Computational Complexity
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasComplexity") {
+                vals.computational_complexity = p.value.value;
+              }
+
+              // Applicable AI Methods
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasApplicableMethodType") {
+                vals.ai_methods.push(p.value.value)
+              }
+
+              // Applicable AI Tasks
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#applicableProblemType") {
+                vals.ai_tasks.push(p.value.value)
+              }
+              // Implementation Framework	
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#hasBackend") {
+                vals.implementation.push(p.value.value)
+              }
+
+              // Needs Training Data
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#needs_training_data") {
+                vals.needs_training_data = p.value.value;
+              }
+
+              // Model Access
+              if (p.property.value == "http://www.w3id.org/iSeeOnto/explainer#has_model_access") {
+                vals.model_access = p.value.value;
+              }
+
+              // Metadata
+              if (p.property.value == "http://www.w3.org/2000/01/rdf-schema#comment") {
+                var metadata = p.value.value;
+                if (metadata.includes('META_DESCRIPTION')) {
+                  vals.metadata = JSON.stringify(metadata.substring(metadata.indexOf('=') + 1));
+                }
+              }
+
+            })
+            data.push(vals)
+          }
+          console.log(data);
+          return data;
+
+        })
+        .catch(function (error) {
+          console.log("error - inner: ", error)
+
+          return { message: "SPARQL SERVER QUERY ERROR - Inner", error: error.response ? error.response.data : error };
+        });
+
+    } catch (error) {
       return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
     }
   }
