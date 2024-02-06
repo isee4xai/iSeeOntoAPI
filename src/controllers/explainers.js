@@ -345,6 +345,7 @@ module.exports.delete = async (req, res) => {
       console.log("Deleting Explainer " + explainer);
 
       const query = `
+      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
       prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -377,6 +378,7 @@ module.exports.delete = async (req, res) => {
         .then(function (response) {
           console.log(response);
           var all_values = response.data.results.bindings;
+          console.log(all_values);
           var list_keyed = {}
           all_values.forEach(single => {
             if (!list_keyed[single.class.value]) {
