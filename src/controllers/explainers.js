@@ -345,22 +345,26 @@ module.exports.delete = async (req, res) => {
       console.log("Deleting Explainer " + explainer);
 
       const query_one = `
-      
+      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+      prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       
       SELECT *
       WHERE {
         ?t rdfs:label `+explainer.replaceAll('/', '_')+` ;
               ?p ?o .
+        ?t2 rdfs:label `+explainer.replaceAll('/', '_')+ "_technique"+` ;
+              ?p2 ?o2 . 
       }
       `;
 
       var data = qs.stringify({
-        'update': query_one
+        'query': query_one
       });
       var config = {
         method: 'post',
-        url: BASE_URL_EXPLAINERS + 'update',
+        url: endpointUrl, //BASE_URL_EXPLAINERS + 'sparql',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
