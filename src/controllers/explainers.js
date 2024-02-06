@@ -372,8 +372,19 @@ module.exports.delete = async (req, res) => {
         },
         data: data
       };
-      const response_one = await axios(config);
-      console.log(response_one.data);
+      const response = await axios(config);
+
+      var all_values = response.data.results.bindings;
+      var list_keyed = {}
+      all_values.forEach(single => {
+          if (!list_keyed[single.class.value]) {
+              list_keyed[single.class.value] = []
+          }
+          list_keyed[single.class.value].push(single)
+      });
+
+      console.log(list_keyed);
+
       res.status(200).json({ response: response.data });
 
     } catch (error) {
