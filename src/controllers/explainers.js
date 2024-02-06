@@ -352,9 +352,9 @@ module.exports.delete = async (req, res) => {
       
       SELECT *
       WHERE {
-        ?tech_text rdfs:label `+data.name.replaceAll('/', '_')+` ;
+        ?tech_text rdfs:label `+explainer.replaceAll('/', '_')+` ;
               ?p ?o .
-        ?tech_text2 rdfs:label `+data.name.replaceAll('/', '_')+ "_technique"+` ;
+        ?tech_text2 rdfs:label `+explainer.replaceAll('/', '_')+ "_technique"+` ;
               ?p2 ?o2 . 
       }
       `;
