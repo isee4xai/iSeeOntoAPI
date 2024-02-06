@@ -372,6 +372,7 @@ module.exports.delete = async (req, res) => {
 
       
       const response_one = await axios(config);
+      console.log(response_one);
 
       const query_two = `
       prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
