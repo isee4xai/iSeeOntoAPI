@@ -344,7 +344,7 @@ module.exports.delete = async (req, res) => {
       const explainer = req.body.data.id;
       console.log("Deleting Explainer " + explainer);
 
-      const query_one = `
+      const query = `
       prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
       prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -360,9 +360,9 @@ module.exports.delete = async (req, res) => {
       }
       `;
 
-      console.log("query", query_one);
+      console.log("query", query);
       var data = qs.stringify({
-        'query': query_one
+        'query': query
       });
       var config = {
         method: 'post',
@@ -373,6 +373,7 @@ module.exports.delete = async (req, res) => {
         data: data
       };
       const response = await axios(config);
+      console.log(response.data);
 
       var all_values = response.data.results.bindings;
       var list_keyed = {}
