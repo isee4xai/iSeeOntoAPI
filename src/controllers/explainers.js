@@ -342,7 +342,7 @@ module.exports.delete = async (req, res) => {
   else {
     try {
       const explainer = req.body.data.id;
-      console.log("Deleting Explainer" + explainer);
+      console.log("Deleting Explainer " + explainer);
 
       const query_one = `
       prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
@@ -350,16 +350,12 @@ module.exports.delete = async (req, res) => {
       prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       
-      DELETE
+      SELECT *
       WHERE {
         ?tech_text rdfs:label `+data.name.replaceAll('/', '_')+` ;
               ?p ?o .
-        
-      }
-      DELETE
-      WHERE {
-        ?tech_text rdfs:label `+data.name.replaceAll('/', '_')+ "_technique"+` ;
-              ?p ?o .
+        ?tech_text2 rdfs:label `+data.name.replaceAll('/', '_')+ "_technique"+` ;
+              ?p2 ?o2 . 
       }
       `;
 
