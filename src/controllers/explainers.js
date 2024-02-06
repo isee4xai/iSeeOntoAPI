@@ -385,7 +385,7 @@ module.exports.delete = async (req, res) => {
       
       DELETE
       WHERE {
-        ?t rdfs:label "_Tabular_LIME_technique"^^xsd:string ;
+        ?t rdfs:label "_Timeseries_ConfusionMatrix_technique"^^xsd:string ;
               ?p ?o .
       }
       `;
