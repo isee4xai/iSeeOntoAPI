@@ -252,7 +252,7 @@ module.exports.insertExplainer = async (req, res) => {
 					BIND( IRI(?aimethod_text) as ?aimethod) .
 					BIND( IRI(?aitask_text) as ?aitask) .
           BIND( IRI(?model_access_text) as ?model_access) .
-          BIND( `+data.needs_training_data+` as ?training_data) .
+          BIND( `+ data.needs_training_data + ` as ?training_data) .
 					BIND( IRI(?explanation_type_class_text) as ?explanation_type_class) . 
 					` + presentations_bind + implementation_bind + ai_method_bind + ai_task_bind + `					
 				}	
@@ -281,7 +281,7 @@ module.exports.insertExplainer = async (req, res) => {
           console.log("error - inner: ", error)
           res.status(500).json({ error: error });
         });
-	    
+
     } catch (error) {
       return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
     }
@@ -299,7 +299,7 @@ module.exports.anyUpdateAdmin = async (req, res) => {
     try {
       const query = req.body.query;
       console.log(query);
-      
+
       var data = qs.stringify({
         'update': query
       });
@@ -338,34 +338,44 @@ module.exports.delete = async (req, res) => {
     console.log("Unauth access");
     res.status(400).json({ message: "Unauthorised Access!" });
     return;
-  } else {
+  }
+  else {
     try {
-      const data = req.body.data;
-      console.log("Deleting Explainer"+data);
+      const explainer = req.body.data.id;
+      console.log("Deleting Explainer" + explainer);
+
+      const query_one = `
+      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+      prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      prefix owl: <http://www.w3.org/2002/07/owl#>
       
-      // var data = qs.stringify({
-      //   'update': query
-      // });
-      // var config = {
-      //   method: 'post',
-      //   url: BASE_URL_EXPLAINERS + 'update',
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded'
-      //   },
-      //   data: data
-      // };
+      DELETE
+      WHERE {
+        ?tech_text rdfs:label `+data.name.replaceAll('/', '_')+` ;
+              ?p ?o .
+        
+      }
+      DELETE
+      WHERE {
+        ?tech_text rdfs:label `+data.name.replaceAll('/', '_')+ "_technique"+` ;
+              ?p ?o .
+      }
+      `;
 
-      // return axios(config)
-      //   .then(function (response) {
-      //     console.log(response.data)
-      //     res.status(200).json({ response: response.data });
-      //   })
-      //   .catch(function (error) {
-      //     console.log("error - inner: ", error)
-      //     res.status(500).json({ error: error });
-
-      //   });
-      res.status(200).json({ message: "Not Implemented" });
+      var data = qs.stringify({
+        'update': query_one
+      });
+      var config = {
+        method: 'post',
+        url: BASE_URL_EXPLAINERS + 'update',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: data
+      };
+      const response_one = await axios(config);
+      console.log(response_one.data);
+      res.status(200).json({ response: response.data });
 
     } catch (error) {
       return { message: "SPARQL SERVER QUERY ERROR - Outer", error: error };
