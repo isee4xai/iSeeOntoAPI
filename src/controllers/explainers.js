@@ -375,11 +375,12 @@ module.exports.delete = async (req, res) => {
       // console.log(response_one);
 
       const query_two = `
-      prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
+			prefix exp: <http://www.w3id.org/iSeeOnto/explainer#> 
       prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       prefix owl: <http://www.w3.org/2002/07/owl#>
+      prefix pur: <https://purl.org/heals/eo#>
+      prefix rsc: <http://semanticscience.org/resource/>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      prefix xsd: <http://www.w3.org/2001/XMLSchema#>
       
       DELETE
       WHERE {
@@ -391,7 +392,7 @@ module.exports.delete = async (req, res) => {
       console.log(query_two);
 
       var data = qs.stringify({
-        'update': query
+        'update': query_two
       });
       var config = {
         method: 'post',
