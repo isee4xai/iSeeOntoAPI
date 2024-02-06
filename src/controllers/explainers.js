@@ -341,6 +341,9 @@ module.exports.delete = async (req, res) => {
   }
   else {
     try {
+      const explainer = req.body.data.id;
+      console.log("Deleting Explainer " + explainer);
+
       const query = `
       prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       prefix owl: <http://www.w3.org/2002/07/owl#>
