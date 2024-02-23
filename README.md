@@ -31,8 +31,6 @@ IN - Instances
 | UserIntent (SN) | `/api/onto/UserIntent` | <http://www.w3id.org/iSeeOnto/user#UserIntent> | Cockpit | 
 | KnowledgeLevel (IN) | `/api/onto/KnowledgeLevel` | <http://www.w3id.org/iSeeOnto/user#KnowledgeLevel>  | Cockpit |
 
-🚧 Ongoing Development 🚧
-
 ### Response Model
 
 #### For Instances (IN)
@@ -55,8 +53,21 @@ IN - Instances
 ]
 ```
 
+## Local Setup
+### Fuseki Setup
 
-### Setup
+- Download the Fuseki package https://jena.apache.org/documentation/fuseki2/#download-fuseki-with-ui
+- Extract the zip
+- Run Fuseki server within the extracted folder `./fuseki-server`
+- Goto http://localhost:3030/#/
+- Goto the manage tab (Screenshot below)
+![image](https://github.com/chamathpali/iSeeOntoAPI/assets/5123109/a89feeaf-a684-4f29-9756-2204c63a44aa)
+Here you can create a new dataset if its not existing
+- Make sure to use the same name in the `.env` file update the `SPAQRL_ENDPOINT=http://localhost:3030/DATABASE_NAME_HERE/` e.g. `SPAQRL_ENDPOINT=http://localhost:3030/isee-dev/`
+- Now you can use the OntoAPI, make sure to run the dump endpoint on the first run!
+
+
+### OntoAPI Setup
 
 ```
 npm install
@@ -68,11 +79,12 @@ Create a .env file and change the `SPAQRL_ENDPOINT` connection string as require
 npm start
 ```
 
-## Docker Setup
+#### Docker Setup
 
 ```
 docker build -f Dockerfile -t isee4xai/ontoapi:dev .
 
 docker-compose  --file docker-compose.yml up -d --build
 ```
+
 
